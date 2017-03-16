@@ -2,11 +2,11 @@
  * Created by kevin on 3/15/2017.
  */
 public enum Terrain {
-        VOLCANO("Volcano"),
         JUNGLE("Jungle"),
         LAKE("Lake"),
         GRASSLANDS("Grass"),
-        ROCKY("Rocky");
+        ROCKY("Rocky"),
+        VOLCANO("Volcano");
         private String terrainText;
         //Constructor
         private Terrain(String terrainText){
@@ -21,3 +21,4 @@ public enum Terrain {
             terrainText = Terrain;
         }
 }
+
