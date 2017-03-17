@@ -4,4 +4,8 @@ public class Clock{
 	public static void increment(){
 		this.turnCounter++;
 	}
+	
+	public static void displayCounter(){
+		System.out.println(this.turnCounter);
+	}
 }
