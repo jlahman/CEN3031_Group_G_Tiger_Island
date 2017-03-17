@@ -17,7 +17,7 @@ public class Deck {
 
         tilesUsed = 0;
         /*Create the 16 tile types as per pdf*/
-        for(TileType tileType : TileType.values()){
+        for(TileType tileType: TileType.values()){
             /*3 times*/
             for(int tileNum = 0; tileNum < 3; tileNum++){
                 deck[tilesUsed] = new Tile(tileType);
