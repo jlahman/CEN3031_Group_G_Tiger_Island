@@ -1,11 +1,14 @@
 public class Clock{
-	private static int turnCounter= 0;
+	private static boolean turnCounter= true;
 
 	public static void increment(){
-		this.turnCounter++;
+		this.turnCounter=!(this.turnCounter);
 	}
 	
 	public static void displayCounter(){
-		System.out.println(this.turnCounter);
+		if(this.turnCounter)
+			System.out.println("White");
+		else if(!(this.turnCounter))
+			System.out.println("Black");
 	}
 }
