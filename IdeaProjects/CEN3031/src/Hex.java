@@ -2,35 +2,50 @@
  * Created by kevin on 3/15/2017.
  */
 public class Hex {
-    //Codes for type of terrain
-    //update to use the enum terrain kevin defined
-    /* private final static int JUNGLE = 0;
-    private final static int LAKE = 1;
-    private final static int GRASS = 2;
-    private final static int ROCKY = 3;
-    private final static int VOLCANO = 4;*/
-
     //Hexes are made up of a terrain and level. Terrain is unchangeable.
     private final Terrain terrain;
+    private final int  N = 6;
     private int level;
-    private Hex adjHex[] = new Hex[6];
-    private int parentIndex, childOneIndex, childTwoIndex;
-
-    public void setSpace(boolean space) {
-        isSpace = space;
-    }
-
+    private Hex adjHex[] = new Hex[N];
+    private int parentIndex;//, childOneIndex, childTwoIndex;
     private boolean isSpace;
     private int orientation;
+
+    //The constructor for the hex class
+    public Hex(){
+        isSpace = true;
+        level = 0;
+        terrain = null;
+    }
+
+    public Hex(Terrain type){
+
+        terrain = type;
+        level = 0;
+        isSpace = false;
+        orientation = 0;
+        for (int i = 0; i < 6; i++) {
+            adjHex[i] = new Hex();
+            adjHex[i].setParentIndex((i+3)%6);
+            adjHex[i].setAdjHex((i+3)%6, this);
+        }
+    }
 
     public void init(){
         for (int i = 0; i < 6; i++) {
             adjHex[i] = new Hex();
             adjHex[i].setParentIndex((i+3)%6);
             adjHex[i].setAdjHex((i+3)%6, this);
-            // if(i!=0) adjHex[i].setAdjHex(i, adjHex[i-1]);
-            // adjHex[i].setSpace(true);
         }
+    }
+
+    //Getter for Hex terrain
+    public Terrain getHexTerrain(){
+        return terrain;
+    }
+
+    public void setSpace(boolean space) {
+        isSpace = space;
     }
 
     public int getParentIndex() {
@@ -41,7 +56,7 @@ public class Hex {
         this.parentIndex = parentIndex;
     }
 
-    public int getChildOneIndex() {
+   /* public int getChildOneIndex() {
         return childOneIndex;
     }
 
@@ -55,7 +70,7 @@ public class Hex {
 
     public void setChildTwoIndex(int childTwoIndex) {
         this.childTwoIndex = childTwoIndex;
-    }
+    }*/
 
 
     public Hex getParent() {
@@ -66,8 +81,12 @@ public class Hex {
         this.adjHex[parentIndex] = parent;
     }
 
-    public Hex getChild(int index) {
-        if(index == 1)
+   /* public Hex getChild(int index) {
+        if(index != parentIndex) {
+            return adjHex[index];
+        }
+        else
+        }
             return this.adjHex[childOneIndex];
         else
             return this.adjHex[childTwoIndex];
@@ -78,16 +97,7 @@ public class Hex {
             this.adjHex[childOneIndex] = child;
         else
             this.adjHex[childTwoIndex] = child;
-    }
-
-    //The constructor for the hex class
-    public Hex(){
-        isSpace = true;
-        //adjHex = new Hex[6];
-        level = 0;
-        terrain = null;
-
-    }
+    }*/
 
     public int getOrientation() {
         return orientation;
@@ -95,32 +105,6 @@ public class Hex {
 
     public void setOrientation(int orientation) {
         this.orientation = orientation;
-    }
-
-    public Hex(Terrain type){
-
-        terrain = type;
-        level = 0;
-        //adjHex = new Hex[6];
-        isSpace = false;
-        orientation = 0;
-        //init();
-        for (int i = 0; i < 6; i++) {
-            adjHex[i] = new Hex();
-            adjHex[i].setParentIndex((i+3)%6);
-            adjHex[i].setAdjHex((i+3)%6, this);
-           // if(i!=0) adjHex[i].setAdjHex(i, adjHex[i-1]);
-           // adjHex[i].setSpace(true);
-        }
-        /*adjHex[0].setAdjHex(5, adjHex[5]);
-        for(int i = 0; i<5; i++){
-            adjHex[i].setAdjHex(i+1, adjHex[i+1]);
-        }
-        adjHex[5].setAdjHex(0, adjHex[0]);*/
-    }
-    //Getter for Hex terrain
-    public Terrain getHexTerrain(){
-        return terrain;
     }
 
     public boolean isSpaceTile(){
@@ -144,17 +128,18 @@ public class Hex {
         }*/
      return terrain.getTerrainText();
     }
-    //Setter for Hex terrain
-    public void setHexTerrain(Terrain terrainType){
 
-    }
     //Getter for level
     public int getLevel(){
         return level;
     }
 
-    //when not pressed for time, add proper error checking
+    //Setter for level
+    public void setLevel(int level){
+        this.level = level;
+    }
 
+    //when not pressed for time, add proper error checking
     public Hex getAdjHex(int index) {
         return adjHex[index];
     }
@@ -162,10 +147,7 @@ public class Hex {
     public void setAdjHex(int index, Hex hex) {
         adjHex[index] = hex;
     }
-    //Setter for level
-    public void setLevel(int level){
-        this.level = level;
-    }
+
 
     public String toString(){
         return "test ";

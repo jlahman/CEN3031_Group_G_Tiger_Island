@@ -14,11 +14,12 @@ public class Board {
     public Board(){
         this.rootVolcano = new Hex(Terrain.VOLCANO);
         this.rootVolcano.setLevel(0);
+        rootVolcano.setSpace(true);
         this.rootVolcano.setParentIndex(-1);
         this.space.add(rootVolcano);
-        for (int i = 0; i < 6; i++) {
-           rootVolcano.getAdjHex(i).init();
-        }
+      //  for (int i = 0; i < 6; i++) {
+      //     rootVolcano.getAdjHex(i).init();
+      //  }
     }
 
     public String toString(){
@@ -197,7 +198,9 @@ public class Board {
                 volHex = false;
         }
         else {
-            if( temp.getAdjHex(adjIndex[0]).getHexTerrain() == Terrain.VOLCANO)
+            if( temp.probe(index- orientation){
+                exists? if no return stating no hex, if yes, isSpace, terrainType,
+            } .getAdjHex(adjIndex[0]).getHexTerrain() == Terrain.VOLCANO)
                 volHex = true;
             else
                 volHex = false;
