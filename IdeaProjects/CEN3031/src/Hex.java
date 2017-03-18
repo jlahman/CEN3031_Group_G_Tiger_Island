@@ -16,6 +16,7 @@ public class Hex {
     private Hex adjHex[] = new Hex[6];
     private int parentIndex, childOneIndex, childTwoIndex;
     private int numOfMeeples= 0;
+    private int numOfTotoro= 0;
 
     public void setSpace(boolean space) {
         isSpace = space;
@@ -175,4 +176,8 @@ public class Hex {
     public int getMeeple(){ return this.numOfMeeples ;}
 
     public void incrementMeeple(){this.numOfMeeples++;}
+
+    public int getTotoro(){ return this.numOfTotoro;}
+
+    public void incrementTotoro(){this.numOfTotoro++;}
 }
