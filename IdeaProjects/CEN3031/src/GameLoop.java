@@ -12,6 +12,4 @@ public class GameLoop {
         gameBoard.placeTile(t3, 5, 0, 0);
         System.out.println(gameBoard.toString());
     }
-
-
 }
