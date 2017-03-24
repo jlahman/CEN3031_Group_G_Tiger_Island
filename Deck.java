@@ -7,6 +7,7 @@ public class Deck {
         System.out.println(tile.showTile());
         System.out.println(tile.getTilelevel());*/
         Deck deckOne = new Deck();
+        deckOne.createDeck();
     }
     private Tile[] deck;
     private int tilesUsed; //how many tiles have been used from the deck
@@ -20,13 +21,16 @@ public class Deck {
             /*3 times*/
             for(int tileNum = 0; tileNum < 3; tileNum++){
                 deck[tilesUsed] = new Tile(tileType);
-                //System.out.println(deck[tilesUsed].showTile());
-                tilesUsed++;
+                System.out.println(deck[tilesUsed].showTile());
             }
         }
         tilesUsed = 0;
     }
-    //
+    /*Add each tile to the deck*/
+    public void createDeck(){
+
+
+    }
     public void shuffle(){
         for ( int i = deck.length-1; i > 0; i-- ) {
             int rand = (int)(Math.random()*(i+1));
@@ -46,14 +50,5 @@ public class Deck {
     }
     public int tilesLeft(){
         return deck.length - tilesUsed;
-    }
-
-    public void printDeck(){
-        for (int i = 0; i < 48; i++) {
-            System.out.println(deck[i].showTile());
-        }
-    }
-    public Tile showTileInDeck(int index){
-        return deck[index];
     }
 }
