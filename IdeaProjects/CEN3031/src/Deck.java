@@ -7,6 +7,7 @@ public class Deck {
         System.out.println(tile.showTile());
         System.out.println(tile.getTilelevel());*/
         Deck deckOne = new Deck();
+        deckOne.createDeck();
     }
     private Tile[] deck;
     private int tilesUsed; //how many tiles have been used from the deck
@@ -25,7 +26,11 @@ public class Deck {
         }
         tilesUsed = 0;
     }
-    //
+    /*Add each tile to the deck*/
+    public void createDeck(){
+
+
+    }
     public void shuffle(){
         for ( int i = deck.length-1; i > 0; i-- ) {
             int rand = (int)(Math.random()*(i+1));
