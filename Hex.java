@@ -1,183 +1,137 @@
 /**
- * Created by kevin on 3/15/2017.
+ * Created by madashi on 3/23/17.
  */
 public class Hex {
-    //Codes for type of terrain
-    //update to use the enum terrain kevin defined
-    /* private final static int JUNGLE = 0;
-    private final static int LAKE = 1;
-    private final static int GRASS = 2;
-    private final static int ROCKY = 3;
-    private final static int VOLCANO = 4;*/
-
     //Hexes are made up of a terrain and level. Terrain is unchangeable.
     private final Terrain terrain;
+    private final int N = 6;
     private int level;
-    private Hex adjHex[] = new Hex[6];
-    private int parentIndex, childOneIndex, childTwoIndex;
-    private int numOfMeeples= 0;
-    private int numOfTotoro= 0;
-
-    public void setSpace(boolean space) {
-        isSpace = space;
-    }
-
+    public Hex adjHex[];
     private boolean isSpace;
-    private int orientation;
-
-    public void init(){
-        for (int i = 0; i < 6; i++) {
-            adjHex[i] = new Hex();
-            adjHex[i].setParentIndex((i+3)%6);
-            adjHex[i].setAdjHex((i+3)%6, this);
-            // if(i!=0) adjHex[i].setAdjHex(i, adjHex[i-1]);
-            // adjHex[i].setSpace(true);
-        }
-    }
-
-    public int getParentIndex() {
-        return parentIndex;
-    }
-
-    public void setParentIndex(int parentIndex) {
-        this.parentIndex = parentIndex;
-    }
-
-    public int getChildOneIndex() {
-        return childOneIndex;
-    }
-
-    public void setChildOneIndex(int childOneIndex) {
-        this.childOneIndex = childOneIndex;
-    }
-
-    public int getChildTwoIndex() {
-        return childTwoIndex;
-    }
-
-    public void setChildTwoIndex(int childTwoIndex) {
-        this.childTwoIndex = childTwoIndex;
-    }
-
-
-    public Hex getParent() {
-        return this.adjHex[parentIndex];
-    }
-
-    public void setParent(Hex parent) {
-        this.adjHex[parentIndex] = parent;
-    }
-
-    public Hex getChild(int index) {
-        if(index == 1)
-            return this.adjHex[childOneIndex];
-        else
-            return this.adjHex[childTwoIndex];
-    }
-
-    public void setChild(int index, Hex child) {
-        if(index == 1)
-            this.adjHex[childOneIndex] = child;
-        else
-            this.adjHex[childTwoIndex] = child;
-    }
+    private Tile tile;
+    private int meeple;
+    private int totoro;
+    private int settlementID;
+    public int radius;
+    public int distance;
+    public Player owner;
 
     //The constructor for the hex class
-    public Hex(){
+    public Hex() {
         isSpace = true;
-        //adjHex = new Hex[6];
         level = 0;
         terrain = null;
-
+        tile = null;
+        adjHex = new Hex[N];
+        meeple = 0;
+        totoro = 0;
+        settlementID = -1;
+        radius = 0;
+        distance = 0;
+        owner = null;
     }
 
-    public int getOrientation() {
-        return orientation;
-    }
-
-    public void setOrientation(int orientation) {
-        this.orientation = orientation;
-    }
-
-    public Hex(Terrain type){
+    public Hex(Terrain type) {
 
         terrain = type;
         level = 0;
-        //adjHex = new Hex[6];
         isSpace = false;
-        orientation = 0;
-        //init();
+        tile = null;
+        adjHex = new Hex[N];
+        meeple = 0;
+        totoro = 0;
+        settlementID = -1;
+        radius = 0;
+        distance = 0;
+        owner = null;
+
         for (int i = 0; i < 6; i++) {
             adjHex[i] = new Hex();
-            adjHex[i].setParentIndex((i+3)%6);
-            adjHex[i].setAdjHex((i+3)%6, this);
-            // if(i!=0) adjHex[i].setAdjHex(i, adjHex[i-1]);
-            // adjHex[i].setSpace(true);
+            adjHex[i].adjHex[(i + 3) % 6] = this;
+            if(i != 0)
+                adjHex[i].adjHex[(i+4)%6] = adjHex[i-1];
         }
-        /*adjHex[0].setAdjHex(5, adjHex[5]);
-        for(int i = 0; i<5; i++){
-            adjHex[i].setAdjHex(i+1, adjHex[i+1]);
+        adjHex[0].adjHex[4] = adjHex[5];
+        for (int i = 0; i < 6; i++){
+            adjHex[i].adjHex[(i+2)%6] = adjHex[(i+1)%6];
         }
-        adjHex[5].setAdjHex(0, adjHex[0]);*/
     }
+
     //Getter for Hex terrain
-    public Terrain getHexTerrain(){
+    public Terrain getTerrain() {
         return terrain;
     }
 
-    public boolean isSpaceTile(){
+    public boolean isSpace() {
         return isSpace;
     }
 
     //Getter for Hex terrain
-    public String getHexTerrainAsString() {
-     /*   switch (terrain) {
-            case ROCKY:
-                return "Rocky";
-            case JUNGLE:
-                return "Jungle";
-            case LAKE:
-                return "Lake";
-            case GRASSLANDS:
-                return "Grass";
-            case VOLCANO:
-                return "Volcano";
-            default:    return "Error: no Terrain";
-        }*/
+    public String getTerrainAsString() {
         return terrain.getTerrainText();
     }
-    //Setter for Hex terrain
-    public void setHexTerrain(Terrain terrainType){
 
-    }
     //Getter for level
-    public int getLevel(){
+    public int getLevel() {
         return level;
     }
 
-    //when not pressed for time, add proper error checking
-
-    public Hex getAdjHex(int index) {
-        return adjHex[index];
-    }
-
-    public void setAdjHex(int index, Hex hex) {
-        adjHex[index] = hex;
-    }
     //Setter for level
-    public void setLevel(int level){
+    public void setLevel(int level) {
         this.level = level;
     }
 
-    public String toString(){
-        return "test ";
+
+    public void updateAdjHexes() {
+        for (int i = 0; i < 6 && adjHex[i] != null; i++) {
+            adjHex[i].adjHex[(i + 3) % 6] = this;
+        }
     }
 
-    public int getMeeple(){ return this.numOfMeeples ;}
+    public void updateAdjHexes(int index) {
+        if(adjHex[index] != null)
+            adjHex[index].adjHex[(index + 3) % 6] = this;
+    }
 
-    public void incrementMeeple(){this.numOfMeeples++;}
+    public Tile getTile() {
+        return tile;
+    }
 
-    public int getTotoro(){ return this.numOfTotoro;}
+    public void setTile(Tile parentTile) {
+        this.tile = parentTile;
+    }
 
-    public void incrementTotoro(){this.numOfTotoro++;}
+    public boolean hasTotoro(){
+        if(totoro > 0)
+            return true;
+        return false;
+    }
+
+    public int getMeeple() {
+        return meeple;
+    }
+
+    public void setMeeple(int meeple) {
+        this.meeple = meeple;
+    }
+
+    public int getTotoro() {
+        return totoro;
+    }
+
+    public void setTotoro(int totoro) {
+        this.totoro = totoro;
+    }
+
+    public int getSettlementID() {
+        return settlementID;
+    }
+
+    public void setSettlementID(int settlementID) {
+        this.settlementID = settlementID;
+    }
+
+    public Player getOwner(){
+        return owner;
+    }
 }
