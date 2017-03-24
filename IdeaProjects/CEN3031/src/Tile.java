@@ -1,41 +1,18 @@
+
+
 /**
- * Created by kevin on 3/15/2017.
- * A tile is essentially a Hex configuration
+ * Created by madashi on 3/23/17.
  */
 public class Tile{
 
     private TileType type; /*Types are JJ for Jungle Jungle,
                         JL JG and JR and so on until RR (double Rocky)*/
     private static final int numHexes = 3; /*There are 3 hexes per tile*/
-    private static Hex hexes[] = new Hex[numHexes]; //Array containing hex objects
+    private Hex hexes[] = new Hex[numHexes]; //Array containing hex objects
     private int orientation;
 
-   /*Tile constructor*/
-   public Tile(TileType tileType){
-
-       Terrain terrainOne = getTerrainOne(tileType);
-       Terrain terrainTwo = getTerrainTwo(tileType);
-        /*Create new hexes for the tile*/
-       hexes[0] = new Hex(Terrain.VOLCANO); hexes[0].init();
-       hexes[1] = new Hex(terrainOne); hexes[1].init();
-       hexes[2] = new Hex(terrainTwo); hexes[2].init();
-
-       hexes[0].setChildOneIndex(0);
-       hexes[0].setChildTwoIndex(1);
-       hexes[0].setChild(1, hexes[1]);
-       hexes[0].setChild(2, hexes[2]);
-       hexes[0].setChildOneIndex(0);
-       hexes[0].setChildTwoIndex(1);
-
-       hexes[1].setAdjHex(2, hexes[2]);
-       hexes[1].setParentIndex(3);
-
-       hexes[2].setAdjHex(4, hexes[1]);
-       hexes[2].setParentIndex(4);
-
-              this.orientation = 0;
-   }
-    public Tile(TileType tileType, int orientation){
+    /*Tile constructor*/
+    public Tile(TileType tileType){
 
         Terrain terrainOne = getTerrainOne(tileType);
         Terrain terrainTwo = getTerrainTwo(tileType);
@@ -43,29 +20,24 @@ public class Tile{
         hexes[0] = new Hex(Terrain.VOLCANO);
         hexes[1] = new Hex(terrainOne);
         hexes[2] = new Hex(terrainTwo);
+        hexes[0].setTile(this);
+        hexes[1].setTile(this);
+        hexes[2].setTile(this);
+        placeHex(hexes[1], hexes[0].adjHex[0]);
+        placeHex(hexes[2], hexes[0].adjHex[1]);
 
-        hexes[0].setChild(1, hexes[1]);
-        hexes[0].setChild(2, hexes[2]);
-        hexes[0].setChildOneIndex(0);
-        hexes[0].setChildTwoIndex(1);
-
-        hexes[1].setAdjHex(2, hexes[2]);
-        hexes[1].setParentIndex(3);
-
-        hexes[2].setAdjHex(4, hexes[1]);
-        hexes[2].setParentIndex(4);
-
-        this.orientation = orientation;
+        this.orientation = 0;
     }
 
     public Hex getTileHex(int index){
         return hexes[index];
     }
+
     /*Test method to see if hexes are correct*/
     public String showTile(){
         String str = "";
         for(Hex h: hexes){
-            str += h.getHexTerrainAsString();
+            str += h.getTerrainAsString();
         }
         return str;
     }
@@ -132,4 +104,25 @@ public class Tile{
         }
     }
 
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(int orientation) {
+
+        placeHex(new Hex(), hexes[0].adjHex[(0 + this.orientation)%6]);
+        placeHex(new Hex(), hexes[0].adjHex[(1 + this.orientation)%6]);
+
+        placeHex(hexes[1], hexes[0].adjHex[(0 + orientation)%6]);
+        placeHex(hexes[2], hexes[0].adjHex[(1 + orientation)%6]);
+
+
+        this.orientation = orientation;
+    }
+    private void placeHex(Hex newHex, Hex oldHex){
+        for(int i = 0; i < 6 && oldHex.adjHex[i] != null; i++){
+            newHex.adjHex[i] = oldHex.adjHex[i];
+        }
+        newHex.updateAdjHexes();
+    }
 }
