@@ -14,6 +14,11 @@ public class Hex {
     private final Terrain terrain;
     private int level;
     private Hex adjHex[] = new Hex[6];
+    private int hexMeeplePopulation;
+    private int hexTotoroPopulation;
+    private int hexTigerPopulation;
+    private int ownerID;
+    private int settlementID;
 
     public void setSpace(boolean space) {
         isSpace = space;
@@ -40,16 +45,61 @@ public class Hex {
 
     }
 
-    public int getOrientation() {
-        return orientation;
+    public int getHexLevel() {
+        return level;
     }
+
+    public void setHexLevel(int level) {
+        this.level = level;
+    }
+
+    public int getHexMeeplePopulation() {
+        return hexMeeplePopulation;
+    }
+
+    public void setHexMeeplePopulation(int hexMeeplePopulation) {
+        this.hexMeeplePopulation = hexMeeplePopulation;
+    }
+
+    public int getHexTotoroPopulation() {
+        return hexTotoroPopulation;
+    }
+
+    public void setHexTotoroPopulation(int hexTotoroPopulation) {
+        this.hexTotoroPopulation = hexTotoroPopulation;
+    }
+
+    public int getHexTigerPopulation() {
+        return hexTigerPopulation;
+    }
+
+    public void setHexTigerPopulation(int hexTigerPopulation) {
+        this.hexTigerPopulation = hexTigerPopulation;
+    }
+
+    public int getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(int ownerID) {
+        this.ownerID = ownerID;
+    }
+
+    public int getSettlementID() {
+        return settlementID;
+    }
+
+    public void setSettlementID(int settlementID) {
+        this.settlementID = settlementID;
+    }
+
+    public int getOrientation() { return orientation; }
 
     public void setOrientation(int orientation) {
         this.orientation = orientation;
     }
 
     public Hex(Terrain type){
-
         terrain = type;
         level = 0;
         //adjHex = new Hex[6];
