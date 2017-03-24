@@ -14,7 +14,6 @@ public class Hex {
     private final Terrain terrain;
     private int level;
     private Hex adjHex[] = new Hex[6];
-    private int parentIndex, childOneIndex, childTwoIndex;
 
     public void setSpace(boolean space) {
         isSpace = space;
@@ -26,58 +25,10 @@ public class Hex {
     public void init(){
         for (int i = 0; i < 6; i++) {
             adjHex[i] = new Hex();
-            adjHex[i].setParentIndex((i+3)%6);
             adjHex[i].setAdjHex((i+3)%6, this);
             // if(i!=0) adjHex[i].setAdjHex(i, adjHex[i-1]);
             // adjHex[i].setSpace(true);
         }
-    }
-
-    public int getParentIndex() {
-        return parentIndex;
-    }
-
-    public void setParentIndex(int parentIndex) {
-        this.parentIndex = parentIndex;
-    }
-
-    public int getChildOneIndex() {
-        return childOneIndex;
-    }
-
-    public void setChildOneIndex(int childOneIndex) {
-        this.childOneIndex = childOneIndex;
-    }
-
-    public int getChildTwoIndex() {
-        return childTwoIndex;
-    }
-
-    public void setChildTwoIndex(int childTwoIndex) {
-        this.childTwoIndex = childTwoIndex;
-    }
-
-
-    public Hex getParent() {
-        return this.adjHex[parentIndex];
-    }
-
-    public void setParent(Hex parent) {
-        this.adjHex[parentIndex] = parent;
-    }
-
-    public Hex getChild(int index) {
-        if(index == 1)
-            return this.adjHex[childOneIndex];
-        else
-            return this.adjHex[childTwoIndex];
-    }
-
-    public void setChild(int index, Hex child) {
-        if(index == 1)
-            this.adjHex[childOneIndex] = child;
-        else
-            this.adjHex[childTwoIndex] = child;
     }
 
     //The constructor for the hex class
@@ -107,7 +58,6 @@ public class Hex {
         //init();
         for (int i = 0; i < 6; i++) {
             adjHex[i] = new Hex();
-            adjHex[i].setParentIndex((i+3)%6);
             adjHex[i].setAdjHex((i+3)%6, this);
            // if(i!=0) adjHex[i].setAdjHex(i, adjHex[i-1]);
            // adjHex[i].setSpace(true);
