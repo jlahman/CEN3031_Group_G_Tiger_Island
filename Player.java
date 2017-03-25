@@ -1,4 +1,3 @@
-// Player
 public class Player {
     private int meepleCount;
     private int totoroCount;
