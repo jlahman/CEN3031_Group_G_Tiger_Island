@@ -6,6 +6,10 @@ import java.util.Vector;
  * Created by madashi on 3/23/17.
  */
 public class Settlement {
+    private int settlementID;
+    public Settlement() {settlementID = -1;}
+    public Settlement(int id) {settlementID = id;}
+
    // private int settlementSize;
     private List<Hex> hexesInSettlement = new Vector<>();
 
