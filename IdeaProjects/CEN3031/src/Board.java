@@ -1,252 +1,221 @@
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
+
 
 /**
- * Created by madashi on 3/23/17.
+ * Created by Justin Lahman on 3/16/17.
  */
 public class Board {
-    public Hex rootHex;
-    public List<Settlement> settlementList = new Vector<Settlement>();
-    //private List<List<Hex>> coord = new Vector<List<Hex>>();
+
+    private Hex rootVolcano;
+    private List<Hex> space = new LinkedList<Hex>();
+    private List<Tile> playedTiles =  new LinkedList<Tile>();
 
     public Board(){
-        rootHex = new Hex();
+        this.rootVolcano = new Hex(Terrain.VOLCANO);
+        this.rootVolcano.setLevel(0);
+        this.rootVolcano.setParentIndex(-1);
+        this.space.add(rootVolcano);
+        for (int i = 0; i < 6; i++) {
+           rootVolcano.getAdjHex(i).init();
+        }
     }
 
-    public void placeTile(Tile tile, Hex oldHex, int connectingHex){
-        if(isPlacementValid(tile, oldHex, connectingHex)){
-            /*Hex temp1 = tile.getTileHex((connectingHex + 1)%3);
-            Hex temp2 = tile.getTileHex((connectingHex + 2)%3);
-            tile.getOrientation();
-            switch(oldHex.distance%oldHex.radius){
-                case 0: switch(tile.getOrientation()) {
-                    case 0:
-                        temp1.radius = oldHex.radius + 1;
-                        temp1.distance = oldHex.distance;
-                    case 1:
-                        temp1.radius = oldHex.radius + 1;
-                        temp1.distance = oldHex.distance + 1;
-                    case 2:
-                        temp1.radius = oldHex.radius;
-                        temp1.distance = oldHex.distance + 1;
-                    case 5:
-                        temp1.radius = oldHex.radius;
-                        temp1.distance = oldHex.distance - 1;
-                    case 3:
-                        temp1.radius = oldHex.radius - 1;
-                        temp1.distance = oldHex.distance;
-                    case 4:
-                        temp1.radius = oldHex.radius - 1;
-                        temp1.distance = oldHex.distance - 1;
+    public String toString(){
+        String temp = "Root = " + rootVolcano.toString();
+        return temp;
+    }
+
+    public void placeTile(Tile tile, int orientation, int indexOfSpace, int connectingHex){
+        if(isPlacementValid(tile, orientation, indexOfSpace, connectingHex)) {
+            //replace volcano hex in free tile list if placed on volcano
+            //find and replace v, t1, t2 in terrain tree if tile placed on is volcano
+            //set level appropriately
+            //update all surrounding links to the three hexes
+            //foreach hex in tile, copy links from replaced tile, adjusted for orientation, apply links
+            //for current tile peices
+            Hex temp = space.get(indexOfSpace);
+            if(playedTiles.size()==0) {
+                tile.getTileHex(0).setParentIndex(-1);
+            }
+            else if(temp.getParentIndex() != -1) {
+                if (temp.getParent().getChild(1) == temp) {
+                    temp.getParent().setChild(1, tile.getTileHex(connectingHex));
+                } else if (temp.getParent().getChild(2) == temp) {
+                    temp.getParent().setChild(2, tile.getTileHex(connectingHex));
                 }
-            }*/
-            placeHex(tile.getTileHex(connectingHex), oldHex);
-            placeHex(tile.getTileHex((connectingHex + 1)%3), tile.getTileHex(connectingHex).adjHex[(2*connectingHex + tile.getOrientation())%6]);
-            placeHex(tile.getTileHex((connectingHex + 2)%3), tile.getTileHex(connectingHex).adjHex[(2*connectingHex + tile.getOrientation() + 1)%6]);
-        }
-    }
-
-    private void updatePlus(Hex newHex, Hex plusHex, int index){
-        index = (index+5)%6;
-        if(plusHex.adjHex[index] == newHex) return;
-        else {
-            plusHex.adjHex[index] = newHex;
-            plusHex.updateAdjHexes(index);
-        }
-        if(plusHex.adjHex[(index+1)%6] == null)
-            return;
-        else
-            updatePlus(newHex, plusHex.adjHex[(index+1)%6], index);
-    }
-
-    private void updateMinus(Hex newHex, Hex minusHex, int index){
-        index = (index+1)%6;
-        if(minusHex.adjHex[index] == newHex) return;
-        else {
-            minusHex.adjHex[index] = newHex;
-            minusHex.updateAdjHexes(index);
-        }
-        if(minusHex.adjHex[(index+5)%6] == null)
-            return;
-        else
-            updatePlus(newHex, minusHex.adjHex[(index+5)%6], index);
-    }
-
-
-    private void placeHex(Hex newHex, Hex oldHex){
-        for(int i = 0; i < 6 /*&& oldHex.adjHex[i] != null*/; i++){
-            if(oldHex.adjHex[i] == null){
-                if( oldHex.adjHex[(i+5)%6] != null)
-                    updateMinus(newHex.adjHex[i], oldHex.adjHex[(i+5)%6], i);
-                    //oldHex.adjHex[(i+5)%6].adjHex[(i+1)%6] = newHex.adjHex[i];
-                if( oldHex.adjHex[(i+1)%6] != null)
-                    updatePlus(newHex.adjHex[i], oldHex.adjHex[(i+1)%6], i);
-                    //oldHex.adjHex[(i+1)%6].adjHex[(i+5)%6] = newHex.adjHex[i];
             }
-            else newHex.adjHex[i] = oldHex.adjHex[i];
-        }
-        newHex.radius = oldHex.radius;
-        newHex.distance = oldHex.distance;
-        if(oldHex.isSpace()){
-            newHex.setLevel(1);
+//            temp.getChild(1).setParent(tile.getTileHex(connectingHex));
+    //        temp.getChild(2).setParent(tile.getTileHex(connectingHex));
 
+
+            updateHexNeighbors(temp, tile.getTileHex(connectingHex), connectingHex);
+
+            int adjIndex[] = new int[3];
+
+            switch(connectingHex){
+                case 0: adjIndex[1] = (0 + orientation) % 6;
+                        adjIndex[2] = (1 + orientation) % 6;
+                        updateHexNeighbors(temp.getAdjHex((0+orientation)%6), tile.getTileHex(1), 1);
+                        updateHexNeighbors(temp.getAdjHex((1+orientation)%6), tile.getTileHex(2), 2);
+                        break;
+                case 1: adjIndex[0] = (3 + orientation) % 6;
+                        adjIndex[2] = (2 + orientation) % 6;
+                        updateHexNeighbors(temp.getAdjHex((3+orientation)%6), tile.getTileHex(0), 0);
+                        updateHexNeighbors(temp.getAdjHex((2+orientation)%6), tile.getTileHex(2), 2);
+                        break;
+                case 2: adjIndex[1] = (5 + orientation) % 6;
+                        adjIndex[0] = (4 + orientation) % 6;
+                        updateHexNeighbors(temp.getAdjHex((5+orientation)%6), tile.getTileHex(1), 1);
+                        updateHexNeighbors(temp.getAdjHex((4+orientation)%6), tile.getTileHex(0), 0);
+                        break;
+                default: break;
+            }
+
+            playedTiles.add(tile);
+            tile.setLevel(space.get(indexOfSpace).getLevel() + 1);
+            //update maybe playable spaces
+            //test if was placed one level 1 or if one volcano
+            //if(tile.getTileHex(0).getLevel() == 1){
+                if(playedTiles.size() == 1 || temp.getHexTerrain() == Terrain.VOLCANO){
+                    space.set(indexOfSpace, tile.getTileHex(0));
+                    if(playedTiles.size() == 1) rootVolcano = space.get(0);
+                }
+                //else if( temp.getAdjHex(adjIndex[0]).getHexTerrain() == Terrain.VOLCANO){
+
+                //}
+                else space.add(tile.getTileHex(0));
+
+                for(int i = 2; i < 6 && tile.getTileHex(0).getAdjHex(i).isSpaceTile(); i++) {
+                    space.add(tile.getTileHex(0).getAdjHex(i));
+                }
+                for(int i = 4; i < 6 && tile.getTileHex(1).getAdjHex(i).isSpaceTile(); i++){
+                    space.add(tile.getTileHex(1).getAdjHex(i));
+                }
+                for(int i = 0; i < 4 && tile.getTileHex(2).getAdjHex(i).isSpaceTile(); i++){
+                    space.add(tile.getTileHex(2).getAdjHex(i));
+                }
+           // }
+            if(temp.getAdjHex(adjIndex[0]).getHexTerrain() == Terrain.VOLCANO)
+                space.set(indexOfSpace, tile.getTileHex(0));
+
+        }
+    }
+
+    private boolean isPlacementValid(Tile tile, int orientation, int indexOfSpace, int hexIndex){
+        int adjIndex[] = new int[3];
+        Hex temp = space.get(indexOfSpace);
+
+        //set turn as global flags in the game class in future
+        boolean volHex = false;
+        boolean levZero = false;
+        boolean firstTurn = false;
+        boolean sameLevel = false;
+        boolean isSpace = false;
+        boolean notSameTile = false;
+        //test if the placement is on level 1, aka no tiles below
+        if(temp.getLevel() == 0)
+            levZero = true;
+
+        //test if there are no tiles on the field
+        if(space.contains(rootVolcano))
+            firstTurn = true;
+
+        //test if there are three spaces available on the same level
+        switch(hexIndex) {
+            case 0:
+                adjIndex[1] = (0 + orientation) % 6;
+                adjIndex[2] = (1 + orientation) % 6;
+                if (temp.isSpaceTile() && temp.getAdjHex(adjIndex[1]).isSpaceTile() &&
+                        temp.getAdjHex(adjIndex[2]).isSpaceTile())
+                    isSpace = true;
+                else if (temp.getLevel() == temp.getAdjHex(adjIndex[1]).getLevel() &&
+                        temp.getLevel() == temp.getAdjHex(adjIndex[2]).getLevel() &&
+                        temp.getAdjHex(adjIndex[1]).getLevel() == temp.getAdjHex(adjIndex[2]).getLevel())
+                    sameLevel = true;
+                for (Tile tileF : playedTiles) {
+                    if (tileF.isHexInTile(temp) && tileF.isHexInTile(temp.getAdjHex(adjIndex[1])) &&
+                            tileF.isHexInTile(temp.getAdjHex(adjIndex[2]))) {
+                        notSameTile = true;
+                        break;
+                    }
+                }
+                break;
+            case 1:
+                adjIndex[0] = (3 + orientation) % 6;
+                adjIndex[2] = (2 + orientation) % 6;
+                if (temp.isSpaceTile() && temp.getAdjHex(adjIndex[0]).isSpaceTile() &&
+                        temp.getAdjHex(adjIndex[2]).isSpaceTile())
+                    isSpace = true;
+                else if (temp.getLevel() == temp.getAdjHex(adjIndex[0]).getLevel() &&
+                        temp.getLevel() == temp.getAdjHex(adjIndex[2]).getLevel() &&
+                        temp.getAdjHex(adjIndex[0]).getLevel() == temp.getAdjHex(adjIndex[2]).getLevel())
+                    sameLevel = true;
+
+                for (Tile tileF: playedTiles) {
+                    if (tileF.isHexInTile(temp) && tileF.isHexInTile(temp.getAdjHex(adjIndex[1])) &&
+                            tileF.isHexInTile(temp.getAdjHex(adjIndex[2]))) {
+                        notSameTile = true;
+                        break;
+                    }
+                }
+                break;
+
+            case 2:
+                adjIndex[1] = (5 + orientation) % 6;
+                adjIndex[0] = (4 + orientation) % 6;
+                //if(temp.isSpaceTile() && (temp.getAdjHex(adjIndex[1]) == null) &&
+                  //      temp.getAdjHex(adjIndex[0]) == null)
+                    //isSpace = true;
+                //else
+                if(temp.isSpaceTile() && (temp.getAdjHex(adjIndex[1]).isSpaceTile()) &&
+                        temp.getAdjHex(adjIndex[0]).isSpaceTile())
+                    isSpace = true;
+               // if (temp.getAdjHex(adjIndex[1]) != null){
+                else if(temp.getLevel() == temp.getAdjHex(adjIndex[1]).getLevel() &&
+                        temp.getLevel() == temp.getAdjHex(adjIndex[0]).getLevel() &&
+                        temp.getAdjHex(adjIndex[1]).getLevel() == temp.getAdjHex(adjIndex[0]).getLevel())
+                {
+                    sameLevel = true;}
+                for (Tile tileF: playedTiles) {
+                    if (tileF.isHexInTile(temp) && tileF.isHexInTile(temp.getAdjHex(adjIndex[1])) &&
+                            tileF.isHexInTile(temp.getAdjHex(adjIndex[2]))) {
+                        notSameTile = true;
+                        break;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        //test if the tiles volcanic hex is on a volcano
+        if(hexIndex == 0){
+            if(space.get(indexOfSpace).getHexTerrain() == Terrain.VOLCANO) {
+                volHex = true;
+            }
+            else
+                volHex = false;
         }
         else {
-            newHex.setLevel(oldHex.getLevel() + 1);
+            if( temp.getAdjHex(adjIndex[0]).getHexTerrain() == Terrain.VOLCANO)
+                volHex = true;
+            else
+                volHex = false;
         }
-        newHex.updateAdjHexes();
-        if(oldHex == rootHex)
-            rootHex = newHex;
+
+        return (firstTurn || (sameLevel && volHex && notSameTile) || (levZero && isSpace));
     }
 
-    public boolean isPlacementValid(Tile tile, Hex oldHex, int connectingHex){
+    private void updateHexNeighbors(Hex oldHex, Hex newHex, int hexIndex) {
+        for (int i = 0; i < 6 && oldHex.getAdjHex(i) != null; i++) {
+            oldHex.getAdjHex(i).setAdjHex((i + 3) % 6, newHex);
 
-        if(oldHex == null || tile == null || (connectingHex > 2) || connectingHex < 0 || !searchFor(oldHex))
-            return false;
+            if(i != (hexIndex*2) && i != (hexIndex*2 + 1))
+                newHex.setAdjHex(i, oldHex.getAdjHex((i + newHex.getOrientation() - oldHex.getOrientation())%6));
 
-        boolean sameLevel = isHexesBelowSameLevel(tile, oldHex, connectingHex);
-        boolean onVolcano = isTileVolcanoOnVolcano(tile, oldHex, connectingHex);
-        boolean isSpace = isTilePlacingOnSpace(oldHex);
-        boolean isNotNuking = isTileNotNukingSizeOneSettlement(tile, oldHex, connectingHex);
-        boolean isNotOnOneTile = isTileOnMoreThanOneTile(tile, oldHex, connectingHex);
-        boolean isNotNukingTotoro = isTileNotNukingTotoro(tile, oldHex, connectingHex);
-
-        boolean validOnSpace = isSpace && sameLevel;
-        boolean validOnBoard = sameLevel && onVolcano && isNotNuking && isNotNukingTotoro && isNotOnOneTile;
-
-        if(settlementList.size() == 0){
-            if(oldHex == rootHex && oldHex.getLevel() == 0){
-                return true;
-            }
         }
-        if(validOnSpace){
-            return true;
+        if(hexIndex != 0){
+            if (oldHex.getHexTerrain() == Terrain.VOLCANO)
+                space.remove(oldHex);
         }
-        else if(validOnBoard){
-            return true;
-        }
-
-        return false;
     }
-
-    private boolean isHexesBelowSameLevel(Tile tile, Hex oldHex, int connectingHex){
-        int hexRightLevel, hexLeftLevel;
-        if(oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6] == null)
-            hexRightLevel = 0;
-        else
-            hexRightLevel = oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6].getLevel();
-        if(oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6] == null)
-            hexLeftLevel = 0;
-        else
-            hexLeftLevel = oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6].getLevel();
-
-        if(oldHex.getLevel() == hexLeftLevel && oldHex.getLevel() == hexRightLevel){
-            return true;
-        }
-        else
-            return false;
-    }
-
-    private boolean isTileVolcanoOnVolcano(Tile tile, Hex oldHex, int connectingHex){
-        Hex temp;
-        if(connectingHex != 0)
-            temp = oldHex.adjHex[(connectingHex + 2 + tile.getOrientation())%6];
-        else
-            temp = oldHex;
-        if(temp == null)
-            return false;
-        if(temp.getTerrain() == Terrain.VOLCANO)
-            return true;
-        return false;
-    }
-
-    private boolean isTilePlacingOnSpace(Hex oldHex){
-        return oldHex.getLevel() == 0;
-    }
-
-    private boolean isTileNotNukingSizeOneSettlement(Tile tile, Hex oldHex, int connectingHex){
-        Hex temp1, temp2;
-        if(connectingHex == 0){
-            temp1 = oldHex.adjHex[0 + tile.getOrientation()];
-            temp2 = oldHex.adjHex[(1 + tile.getOrientation())%6];
-        }
-        else if(connectingHex == 1){
-            temp1 = oldHex;
-            temp2 = oldHex.adjHex[(2 + tile.getOrientation())%6];
-        }
-        else{
-            temp2 = oldHex;
-            temp1 = oldHex.adjHex[(5 + tile.getOrientation())%6];
-        }
-
-        if(temp1 == null && temp2 == null){
-            return true;
-        }
-        if(temp1 != null) {
-            if (temp2 == null && (temp1.getSettlementID() == -1 || settlementList.get(temp1.getSettlementID()).settlementSize() != 1))
-                return true;
-        }
-        if(temp2 != null) {
-            if (temp1 == null && (temp2.getSettlementID() == -1 || settlementList.get(temp2.getSettlementID()).settlementSize() != 1))
-                return true;
-        }
-        if(temp1.getSettlementID() == -1 && temp2.getSettlementID() == -1)
-            return true;
-        if(temp2.getSettlementID() != -1 && temp1.getSettlementID() == -1 && settlementList.get(temp2.getSettlementID()).settlementSize() != 1)
-            return true;
-        if(temp1.getSettlementID() != -1 && temp2.getSettlementID() == -1 && settlementList.get(temp1.getSettlementID()).settlementSize() != 1)
-            return true;
-        if(settlementList.get(temp1.getSettlementID()).settlementSize() != 1 && settlementList.get(temp2.getSettlementID()).settlementSize() != 1)
-            return true;
-
-        return false;
-    }
-
-    private boolean isTileOnMoreThanOneTile(Tile tile, Hex oldHex, int connectingHex){
-        int numberOfTiles = 0;
-        Hex hexLeft = oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6];
-        Hex hexRight = oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6];
-
-        if(hexLeft != null && hexRight != null) {
-            if (oldHex.getTile() == hexLeft.getTile() && oldHex.getTile() == hexRight.getTile())
-                return false;
-        }
-        return true;
-    }
-
-    private boolean isTileNotNukingTotoro(Tile tile, Hex oldHex, int connectingHex){
-        Hex hexLeft = oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6];
-        Hex hexRight = oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6];
-
-        if(hexLeft == null && hexRight == null){
-            return true;
-        }
-        if(hexLeft != null && hexLeft.hasTotoro() == true){
-            return false;
-        }
-        if(hexRight != null && hexRight.hasTotoro() == true){
-            return false;
-        }
-        return true;
-
-    }
-
-    private boolean searchFor(Hex h){
-        return true;
-    }
-
-    public void debug(int i){
-        Hex temp = rootHex.adjHex[0];
-        String ppp = "Root: ";
-        ppp += rootHex + "\n";
-        ppp+= temp;
-        for (int j = 0; j < 6; j++) {
-            for(int k = 0; k < i; k++){
-                temp = temp.adjHex[(2+j)%6];
-                ppp += temp;
-            }
-        }
-        System.out.print(ppp+"\n");
-    }
-
-}
