@@ -3,11 +3,10 @@
  */
 public class Deck {
     public static void main(String[] args) {
-        /*Tile tile = new Tile(6);
-        System.out.println(tile.showTile());
-        System.out.println(tile.getTilelevel());*/
+
         Deck deckOne = new Deck();
-        deckOne.createDeck();
+        System.out.println(deckOne.showTileInDeck(1));
+        //System.out.println(deckOne.drawTile());
     }
     private Tile[] deck;
     private int tilesUsed; //how many tiles have been used from the deck
@@ -21,7 +20,7 @@ public class Deck {
             /*3 times*/
             for(int tileNum = 0; tileNum < 3; tileNum++){
                 deck[tilesUsed] = new Tile(tileType);
-                System.out.println(deck[tilesUsed].showTile());
+                tilesUsed++;
             }
         }
         tilesUsed = 0;
@@ -48,7 +47,12 @@ public class Deck {
         Tile t = deck[tilesUsed];
         return t;
     }
+    //Returns the amount of unused tiles
     public int tilesLeft(){
         return deck.length - tilesUsed;
+    }
+    //Does what it says it does.
+    public Tile showTileInDeck(int index){
+        return deck[index];
     }
 }
