@@ -33,7 +33,15 @@ public class SettlementTest {
 
     @Test
     public void settlementSize() throws Exception {
+        Hex dummyHex0 = new Hex(Terrain.JUNGLE);
+        Hex dummyHex1 = new Hex(Terrain.GRASSLANDS);
+        Hex dummyHex2 = new Hex(Terrain.ROCKY);
+        settlement0.addHex(dummyHex0);
+        settlement0.addHex(dummyHex1);
+        settlement0.addHex(dummyHex2);
 
+        assertEquals(settlement0.settlementSize(), 3);
+        assertEquals(settlement0.settlementSize(), settlement0.hexesInSettlement.size());
     }
 
     @Test
