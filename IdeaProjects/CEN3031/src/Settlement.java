@@ -14,7 +14,10 @@ public class Settlement {
         hexesInSettlement.add(hex);
         settlementID = ID;
         hex.setSettlementID(settlementID);
+    }
 
+    public int getSettlementID(Settlement s) {
+        return s.settlementID;
     }
 
     public int settlementSize(){
