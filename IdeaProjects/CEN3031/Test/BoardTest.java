@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by madashi on 3/23/17.
- *//*
+ */
 public class BoardTest {
     Board b;
     @Before

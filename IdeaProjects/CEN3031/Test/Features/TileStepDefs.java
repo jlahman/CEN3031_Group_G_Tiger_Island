@@ -1,13 +1,13 @@
-/*import cucumber.api.PendingException;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.api.java8.En;*/
+import cucumber.api.java8.En;
 
 /**
  * Created by kevin on 3/25/2017.
- *//*
+ */
 public class TileStepDefs implements En {
     @Given("^Existing tiles$")
     public void game_exists() throws  Throwable{
@@ -49,4 +49,4 @@ public class TileStepDefs implements En {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
-}*/
+}
