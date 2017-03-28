@@ -8,7 +8,7 @@ public class BuildOptions {
 
     // Build settlement
     public void buildSettlement (Board board, int x, int y, Player p) {
-        if(isBuildSettlementValid(board.hexArr[x][y], p.getMeeple())){
+        if(isBuildSettlementValid(board.hexArr[x][y], p.getMeepleCount())){
             Hex settlementHex = board.hexArr[x][y];
             settlementHex.addMeeple();
             int settlementID = board.settlementList.size();
