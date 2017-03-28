@@ -8,23 +8,27 @@ import static org.junit.Assert.*;
  * Created by Harrison on 3/25/2017.
  */
 public class SettlementTest {
-    private Settlement s;
+    private Settlement settlement0;
+    private Hex hex0;
+    private int settlementID;
 
-    /*@Before
+    @Before
     public void setUp() throws Exception {
-
+        settlement0 = new Settlement(hex0, 0);
+        assertEquals(settlement0.getSettlementID(), 0);
     }
 
     @After
     public void tearDown() throws Exception {
 
-    }*/
+    }
 
     @Test
     public void addHexToSettlement() throws Exception{
-        s = new Settlement();
+        settlement0 = new Settlement(hex0, 0);
+        assertEquals(settlement0.getSettlementID(), 0);
         Hex h = new Hex(Terrain.JUNGLE);
-        s.addHex(h);
+        settlement0.addHex(h);
     }
 
     /*@Test
