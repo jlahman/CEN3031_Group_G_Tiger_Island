@@ -87,7 +87,7 @@ public class Hex {
     }
 
     public boolean hasTotoro(){
-        if(totoro > 0)
+        if(totoro > 0 && totoro < 2)
             return true;
         return false;
     }
