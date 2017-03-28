@@ -1,5 +1,3 @@
-
-
 /**
  * Created by madashi on 3/23/17.
  */
@@ -23,8 +21,8 @@ public class Tile{
         hexes[0].setTile(this);
         hexes[1].setTile(this);
         hexes[2].setTile(this);
-        placeHex(hexes[1], hexes[0].adjHex[0]);
-        placeHex(hexes[2], hexes[0].adjHex[1]);
+        //placeHex(hexes[1], hexes[0].getAdjHexIndex(0));
+        //placeHex(hexes[2], hexes[0].getAdjHex(1));
 
         this.orientation = 0;
     }
@@ -46,13 +44,6 @@ public class Tile{
         return hexes[0].getLevel();
     }
 
-    public boolean isHexInTile(Hex hex){
-        for(int i = 0; i < 3; i++){
-            if(hex == hexes[i])
-                return true;
-        }
-        return false;
-    }
 
     public Terrain getTerrainOne(TileType tileType){
         /*If Terrain is a Jungle,*/
@@ -110,19 +101,9 @@ public class Tile{
 
     public void setOrientation(int orientation) {
 
-        placeHex(new Hex(), hexes[0].adjHex[(0 + this.orientation)%6]);
-        placeHex(new Hex(), hexes[0].adjHex[(1 + this.orientation)%6]);
-
-        placeHex(hexes[1], hexes[0].adjHex[(0 + orientation)%6]);
-        placeHex(hexes[2], hexes[0].adjHex[(1 + orientation)%6]);
 
 
         this.orientation = orientation;
     }
-    private void placeHex(Hex newHex, Hex oldHex){
-        for(int i = 0; i < 6 && oldHex.adjHex[i] != null; i++){
-            newHex.adjHex[i] = oldHex.adjHex[i];
-        }
-        newHex.updateAdjHexes();
-    }
+
 }
