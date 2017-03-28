@@ -7,94 +7,32 @@ import java.util.Vector;
 public class Board {
     public Hex rootHex;
     public List<Settlement> settlementList = new Vector<Settlement>();
-    //private List<List<Hex>> coord = new Vector<List<Hex>>();
+    public Hex hexArr[][];
 
     public Board(){
         rootHex = new Hex();
+        hexArr = new Hex[2*48][2*48];
     }
 
     public void placeTile(Tile tile, Hex oldHex, int connectingHex){
-        if(isPlacementValid(tile, oldHex, connectingHex)){
-            /*Hex temp1 = tile.getTileHex((connectingHex + 1)%3);
-            Hex temp2 = tile.getTileHex((connectingHex + 2)%3);
-            tile.getOrientation();
-            switch(oldHex.distance%oldHex.radius){
-                case 0: switch(tile.getOrientation()) {
-                    case 0:
-                        temp1.radius = oldHex.radius + 1;
-                        temp1.distance = oldHex.distance;
-                    case 1:
-                        temp1.radius = oldHex.radius + 1;
-                        temp1.distance = oldHex.distance + 1;
-                    case 2:
-                        temp1.radius = oldHex.radius;
-                        temp1.distance = oldHex.distance + 1;
-                    case 5:
-                        temp1.radius = oldHex.radius;
-                        temp1.distance = oldHex.distance - 1;
-                    case 3:
-                        temp1.radius = oldHex.radius - 1;
-                        temp1.distance = oldHex.distance;
-                    case 4:
-                        temp1.radius = oldHex.radius - 1;
-                        temp1.distance = oldHex.distance - 1;
-                }
-            }*/
+        if(isPlacementValid(tile, oldHex, connectingHex)) {
             placeHex(tile.getTileHex(connectingHex), oldHex);
-            placeHex(tile.getTileHex((connectingHex + 1)%3), tile.getTileHex(connectingHex).adjHex[(2*connectingHex + tile.getOrientation())%6]);
-            placeHex(tile.getTileHex((connectingHex + 2)%3), tile.getTileHex(connectingHex).adjHex[(2*connectingHex + tile.getOrientation() + 1)%6]);
+
+            placeHex(tile.getTileHex((connectingHex + 1) % 3), getAdjHex(oldHex, (2 * connectingHex + tile.getOrientation()) % 6)); //hexArr[oldHex.getAdjHexIndexX((2*connectingHex + tile.getOrientation())%6)][oldHex.getAdjHexIndexY((2*connectingHex + tile.getOrientation())%6)]);
+            placeHex(tile.getTileHex((connectingHex + 2) % 3), getAdjHex(oldHex, (2 * connectingHex + tile.getOrientation() + 1) % 6)); // hexArr[oldHex.getAdjHexIndexX((2*connectingHex + tile.getOrientation() + 1)%6)][oldHex.getAdjHexIndexY((2*connectingHex + tile.getOrientation() + 1)%6)]);
         }
     }
-
-    private void updatePlus(Hex newHex, Hex plusHex, int index){
-        index = (index+5)%6;
-        if(plusHex.adjHex[index] == newHex) return;
-        else {
-            plusHex.adjHex[index] = newHex;
-            plusHex.updateAdjHexes(index);
-        }
-        if(plusHex.adjHex[(index+1)%6] == null)
-            return;
-        else
-            updatePlus(newHex, plusHex.adjHex[(index+1)%6], index);
-    }
-
-    private void updateMinus(Hex newHex, Hex minusHex, int index){
-        index = (index+1)%6;
-        if(minusHex.adjHex[index] == newHex) return;
-        else {
-            minusHex.adjHex[index] = newHex;
-            minusHex.updateAdjHexes(index);
-        }
-        if(minusHex.adjHex[(index+5)%6] == null)
-            return;
-        else
-            updatePlus(newHex, minusHex.adjHex[(index+5)%6], index);
-    }
-
 
     private void placeHex(Hex newHex, Hex oldHex){
-        for(int i = 0; i < 6 /*&& oldHex.adjHex[i] != null*/; i++){
-            if(oldHex.adjHex[i] == null){
-                if( oldHex.adjHex[(i+5)%6] != null)
-                    updateMinus(newHex.adjHex[i], oldHex.adjHex[(i+5)%6], i);
-                    //oldHex.adjHex[(i+5)%6].adjHex[(i+1)%6] = newHex.adjHex[i];
-                if( oldHex.adjHex[(i+1)%6] != null)
-                    updatePlus(newHex.adjHex[i], oldHex.adjHex[(i+1)%6], i);
-                    //oldHex.adjHex[(i+1)%6].adjHex[(i+5)%6] = newHex.adjHex[i];
-            }
-            else newHex.adjHex[i] = oldHex.adjHex[i];
-        }
-        newHex.radius = oldHex.radius;
-        newHex.distance = oldHex.distance;
-        if(oldHex.isSpace()){
-            newHex.setLevel(1);
 
-        }
-        else {
-            newHex.setLevel(oldHex.getLevel() + 1);
-        }
-        newHex.updateAdjHexes();
+        newHex.indexX = oldHex.indexX;
+        newHex.indexY = oldHex.indexY;
+
+        hexArr[newHex.indexX][newHex.indexY] = newHex;
+
+
+        newHex.setLevel(oldHex.getLevel() + 1);
+
         if(oldHex == rootHex)
             rootHex = newHex;
     }
@@ -110,10 +48,13 @@ public class Board {
         boolean isNotNuking = isTileNotNukingSizeOneSettlement(tile, oldHex, connectingHex);
         boolean isNotOnOneTile = isTileOnMoreThanOneTile(tile, oldHex, connectingHex);
         boolean isNotNukingTotoro = isTileNotNukingTotoro(tile, oldHex, connectingHex);
+        boolean isNotNuking2 = isNotNukingEntireSettlement(tile, oldHex, connectingHex);
+        boolean isNotNukingTiger = isTileNotNukingTiger(tile, oldHex, connectingHex);
 
         boolean validOnSpace = isSpace && sameLevel;
-        boolean validOnBoard = sameLevel && onVolcano && isNotNuking && isNotNukingTotoro && isNotOnOneTile;
+        boolean validOnBoard = sameLevel && onVolcano && isNotNuking && isNotNuking2 && isNotNukingTotoro && isNotNukingTiger && isNotOnOneTile;
 
+        //if first turn
         if(settlementList.size() == 0){
             if(oldHex == rootHex && oldHex.getLevel() == 0){
                 return true;
@@ -129,16 +70,59 @@ public class Board {
         return false;
     }
 
+    private int getAdjHexIndexX(Hex hex, int index){
+        int tempX = -1;
+        switch(index){
+            case 0: tempX = hex.indexX;
+                break;
+            case 1: tempX = hex.indexX + 1;
+                break;
+            case 2: tempX = hex.indexX + 1;
+                break;
+            case 3: tempX = hex.indexX;
+                break;
+            case 4: tempX = hex.indexX - 1;
+                break;
+            case 5: tempX = hex.indexX - 1;
+        }
+        return tempX;
+    }
+
+    private int getAdjHexIndexY(Hex hex, int index){
+        int tempY = -1;
+        switch(index){
+            case 0: tempY = hex.indexY - 1;
+                break;
+            case 1: tempY = hex.indexY - 1;
+                break;
+            case 2: tempY = hex.indexY;
+                break;
+            case 3: tempY = hex.indexY + 1;
+                break;
+            case 4: tempY = hex.indexY + 1;
+                break;
+            case 5: tempY = hex.indexY;
+        }
+        return tempY;
+    }
+
+    public Hex getAdjHex(Hex hex, int index){
+        return hexArr[getAdjHexIndexX(hex, index)][getAdjHexIndexY(hex, index)];
+    }
+
+
     private boolean isHexesBelowSameLevel(Tile tile, Hex oldHex, int connectingHex){
         int hexRightLevel, hexLeftLevel;
-        if(oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6] == null)
+
+        if(getAdjHex(oldHex, (2*connectingHex + tile.getOrientation())%6) == null)
             hexRightLevel = 0;
         else
-            hexRightLevel = oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6].getLevel();
-        if(oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6] == null)
+            hexRightLevel = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation())%6).getLevel();
+
+        if(getAdjHex(oldHex, (2*connectingHex + tile.getOrientation() + 1)%6) == null)
             hexLeftLevel = 0;
         else
-            hexLeftLevel = oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6].getLevel();
+            hexLeftLevel = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation() + 1)%6).getLevel();
 
         if(oldHex.getLevel() == hexLeftLevel && oldHex.getLevel() == hexRightLevel){
             return true;
@@ -150,7 +134,7 @@ public class Board {
     private boolean isTileVolcanoOnVolcano(Tile tile, Hex oldHex, int connectingHex){
         Hex temp;
         if(connectingHex != 0)
-            temp = oldHex.adjHex[(connectingHex + 2 + tile.getOrientation())%6];
+            temp = getAdjHex(oldHex, (connectingHex + 2 + tile.getOrientation())%6);
         else
             temp = oldHex;
         if(temp == null)
@@ -167,16 +151,16 @@ public class Board {
     private boolean isTileNotNukingSizeOneSettlement(Tile tile, Hex oldHex, int connectingHex){
         Hex temp1, temp2;
         if(connectingHex == 0){
-            temp1 = oldHex.adjHex[0 + tile.getOrientation()];
-            temp2 = oldHex.adjHex[(1 + tile.getOrientation())%6];
+            temp1 = getAdjHex(oldHex, 0 + tile.getOrientation());
+            temp2 = getAdjHex(oldHex, (1 + tile.getOrientation())%6);
         }
         else if(connectingHex == 1){
             temp1 = oldHex;
-            temp2 = oldHex.adjHex[(2 + tile.getOrientation())%6];
+            temp2 = getAdjHex(oldHex, (2 + tile.getOrientation())%6);
         }
         else{
             temp2 = oldHex;
-            temp1 = oldHex.adjHex[(5 + tile.getOrientation())%6];
+            temp1 = getAdjHex(oldHex, (5 + tile.getOrientation())%6);
         }
 
         if(temp1 == null && temp2 == null){
@@ -204,8 +188,8 @@ public class Board {
 
     private boolean isTileOnMoreThanOneTile(Tile tile, Hex oldHex, int connectingHex){
         int numberOfTiles = 0;
-        Hex hexLeft = oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6];
-        Hex hexRight = oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6];
+        Hex hexLeft = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation() + 1)%6); //oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6];
+        Hex hexRight = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation())%6); //oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6];
 
         if(hexLeft != null && hexRight != null) {
             if (oldHex.getTile() == hexLeft.getTile() && oldHex.getTile() == hexRight.getTile())
@@ -215,8 +199,8 @@ public class Board {
     }
 
     private boolean isTileNotNukingTotoro(Tile tile, Hex oldHex, int connectingHex){
-        Hex hexLeft = oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6];
-        Hex hexRight = oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6];
+        Hex hexLeft = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation() + 1)%6); //oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6];
+        Hex hexRight = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation())%6); //oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6];
 
         if(hexLeft == null && hexRight == null){
             return true;
@@ -231,21 +215,56 @@ public class Board {
 
     }
 
+    private boolean isTileNotNukingTiger(Tile tile, Hex oldHex, int connectingHex){
+        Hex hexLeft = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation() + 1)%6); //oldHex.adjHex[(2*connectingHex + tile.getOrientation() + 1)%6];
+        Hex hexRight = getAdjHex(oldHex, (2*connectingHex + tile.getOrientation())%6); //oldHex.adjHex[(2*connectingHex + tile.getOrientation())%6];
+
+        if(hexLeft == null && hexRight == null){
+            return true;
+        }
+        if(hexLeft != null && hexLeft.hasTiger() == true){
+            return false;
+        }
+        if(hexRight != null && hexRight.hasTiger() == true){
+            return false;
+        }
+        return true;
+
+    }
+
+    private boolean isNotNukingEntireSettlement(Tile tile, Hex oldHex, int connectingHex){
+        Hex temp1, temp2;
+        if(connectingHex == 0){
+            temp1 = getAdjHex(oldHex, 0 + tile.getOrientation());
+            temp2 = getAdjHex(oldHex, (1 + tile.getOrientation())%6);
+        }
+        else if(connectingHex == 1){
+            temp1 = oldHex;
+            temp2 = getAdjHex(oldHex, (2 + tile.getOrientation())%6);
+        }
+        else{
+            temp2 = oldHex;
+            temp1 = getAdjHex(oldHex, (5 + tile.getOrientation())%6);
+        }
+
+
+
+        if(temp1 == null || temp2 == null){
+            return true;
+        }
+        if(temp1.getSettlementID() == temp2.getSettlementID() && temp1.getSettlementID() != -1){
+            if(settlementList.get(temp1.getSettlementID()).settlementSize() == 2)
+                return false;
+        }
+
+            return true;
+    }
+
     private boolean searchFor(Hex h){
         return true;
     }
 
     public void debug(int i){
-        Hex temp = rootHex.adjHex[0];
-        String ppp = "Root: ";
-        ppp += rootHex + "\n";
-        ppp+= temp;
-        for (int j = 0; j < 6; j++) {
-            for(int k = 0; k < i; k++){
-                temp = temp.adjHex[(2+j)%6];
-                ppp += temp;
-            }
-        }
-        System.out.print(ppp+"\n");
+
     }
 }
