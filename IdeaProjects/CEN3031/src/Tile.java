@@ -27,6 +27,7 @@ public class Tile{
         this.orientation = 0;
     }
 
+
     public Hex getTileHex(int index){
         return hexes[index];
     }
@@ -100,10 +101,9 @@ public class Tile{
     }
 
     public void setOrientation(int orientation) {
-
-
-
-        this.orientation = orientation;
+        if(orientation <6 && orientation >=0)
+            this.orientation = orientation;
     }
+
 
 }

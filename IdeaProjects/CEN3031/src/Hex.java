@@ -74,7 +74,8 @@ public class Hex {
 
     //Setter for level
     public void setLevel(int level) {
-        this.level = level;
+        if(level>0)
+            this.level = level;
     }
 
     public Tile getTile() {
