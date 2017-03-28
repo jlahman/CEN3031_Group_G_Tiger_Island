@@ -9,11 +9,12 @@ import static org.junit.Assert.*;
  */
 public class SettlementTest {
     private Settlement settlement0;
-    private Hex hex0;
     private int settlementID;
+    private Hex hex0;
 
     @Before
     public void setUp() throws Exception {
+        hex0 = new Hex();
         settlement0 = new Settlement(hex0, 0);
         assertEquals(settlement0.getSettlementID(), 0);
     }
@@ -24,26 +25,20 @@ public class SettlementTest {
     }
 
     @Test
-    public void addHexToSettlement() throws Exception{
-        settlement0 = new Settlement(hex0, 0);
-        assertEquals(settlement0.getSettlementID(), 0);
-        Hex h = new Hex(Terrain.JUNGLE);
-        settlement0.addHex(h);
-    }
-
-    /*@Test
-    public void settlementSize() throws Exception {
-
+    public void addHexToSettlement() throws Exception {
+        Hex dummyHex = new Hex(Terrain.JUNGLE);
+        settlement0.addHex(dummyHex);
+        assertEquals(settlement0.hexesInSettlement.indexOf(dummyHex), 0);
     }
 
     @Test
-    public void addHex() throws Exception {
+    public void settlementSize() throws Exception {
 
     }
 
     @Test
     public void getOwner() throws Exception {
 
-    }*/
+    }
 
 }
