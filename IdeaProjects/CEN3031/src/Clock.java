@@ -5,6 +5,14 @@ public class Clock{
         this.turnCounter=!(this.turnCounter);
     }
 
+    public void setTurnCounter(boolean bool){
+        this.turnCounter = bool;
+    }
+
+    public boolean getTurnCounter(){
+        return this.turnCounter;
+    }
+
     public void displayCounter(){
         if(this.turnCounter)
             System.out.println("White");
