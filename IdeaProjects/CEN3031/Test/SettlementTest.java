@@ -16,6 +16,12 @@ public class SettlementTest {
     public void setUp() throws Exception {
         hex0 = new Hex();
         settlement0 = new Settlement(hex0, 0);
+    }
+
+    @Test
+    public void settlementID() throws Exception {
+        hex0 = new Hex();
+        settlement0 = new Settlement(hex0, 0);
         assertEquals(settlement0.getSettlementID(), 0);
     }
 
