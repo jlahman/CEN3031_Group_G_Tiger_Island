@@ -12,22 +12,16 @@ public class Player {
     public void setMeepleCount(int meepleCount) {
         if(meepleCount>=0)
             this.meepleCount = meepleCount;
-        else
-            this.meepleCount = 999; //This is just a placeholder that will be changed when we update later
     }
 
     public void setTotoroCount(int totoroCount) {
         if(totoroCount>=0)
             this.totoroCount = totoroCount;
-        else
-            this.totoroCount = 999; //Placeholder
     }
 
     public void setTigerCount(int tigerCount) {
         if(tigerCount>=0)
             this.tigerCount = tigerCount;
-        else
-            this.tigerCount = 999; //Placeholder
     }
 
     public int getMeepleCount() {
