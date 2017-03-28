@@ -19,11 +19,6 @@ public class SettlementTest {
         assertEquals(settlement0.getSettlementID(), 0);
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void addHexToSettlement() throws Exception {
         Hex dummyHex = new Hex(Terrain.JUNGLE);
@@ -59,7 +54,26 @@ public class SettlementTest {
 
     @Test
     public void getOwner() throws Exception {
+        Hex dummyHex = new Hex(Terrain.JUNGLE);
+        Player dummyPlayer = new Player();
+        dummyHex.owner = dummyPlayer;
 
+        settlement0.addHex(dummyHex);
+        assertEquals(settlement0.getOwner(), dummyPlayer);
+    }
+
+    @Test
+    public void getOwnerFail() throws Exception {
+        Hex dummyHex0 = new Hex(Terrain.JUNGLE);
+        Player dummyPlayer0 = new Player();
+        dummyHex0.owner = dummyPlayer0;
+
+        Hex dummyHex1 = new Hex(Terrain.JUNGLE);
+        Player dummyPlayer1 = new Player();
+        dummyHex1.owner = dummyPlayer1;
+
+        settlement0.addHex(dummyHex0);
+        assertNotEquals(settlement0.getOwner(), dummyPlayer1);
     }
 
 }
