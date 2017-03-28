@@ -10,15 +10,18 @@ public class Player {
     }
 
     public void setMeepleCount(int meepleCount) {
-        this.meepleCount = meepleCount;
+        if(meepleCount>=0)
+            this.meepleCount = meepleCount;
     }
 
     public void setTotoroCount(int totoroCount) {
-        this.totoroCount = totoroCount;
+        if(totoroCount>=0)
+            this.totoroCount = totoroCount;
     }
 
     public void setTigerCount(int tigerCount) {
-        this.tigerCount = tigerCount;
+        if(tigerCount>=0)
+            this.tigerCount = tigerCount;
     }
 
     public int getMeepleCount() {
