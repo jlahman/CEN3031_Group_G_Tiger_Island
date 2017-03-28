@@ -1,3 +1,4 @@
+import jdk.jfr.events.ExceptionThrownEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,5 +46,17 @@ public class TileTest {
         t = new Tile(TileType.GL);
         t.setOrientation(6);
         assertFalse(t.getOrientation() == 6);
+    }
+
+    @Test
+    public void getTerrain1Test() throws Exception {
+        t = new Tile(TileType.GJ);
+        assertEquals(t.getTerrainOne(TileType.GJ), Terrain.GRASSLANDS);
+    }
+
+    @Test
+    public void getTerrain2Test() throws Exception {
+        t = new Tile (TileType.GJ);
+        assertEquals(t.getTerrainTwo(TileType.GJ), Terrain.JUNGLE);
     }
 }
