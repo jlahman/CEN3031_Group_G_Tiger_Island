@@ -9,16 +9,16 @@ import cucumber.api.java8.En;
  * Created by kevin on 3/25/2017.
  */
 public class TileStepDefs implements En {
-        @Given("^Existing tiles$")
-        public void game_exists() throws  Throwable{
-            // Write code here that turns the phrase above into concrete actions
-            throw new PendingException();
-        }
-        @And("^Tile placed has no adjacent tiles$")
-        public void tile_placed_with_no_adjacent_tiles() throws Throwable{
-            // Write code here that turns the phrase above into concrete actions
-            throw new PendingException();
-        }
+    @Given("^Existing tiles$")
+    public void game_exists() throws  Throwable{
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+    @And("^Tile placed has no adjacent tiles$")
+    public void tile_placed_with_no_adjacent_tiles() throws Throwable{
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
 
     @Given("^There are existing previous tiles$")
     public void thereAreExistingPreviousTiles() throws Throwable {
@@ -50,4 +50,3 @@ public class TileStepDefs implements En {
         throw new PendingException();
     }
 }
-

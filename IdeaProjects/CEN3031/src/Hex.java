@@ -74,7 +74,8 @@ public class Hex {
 
     //Setter for level
     public void setLevel(int level) {
-        this.level = level;
+        if(level>0)
+            this.level = level;
     }
 
     public Tile getTile() {
@@ -86,7 +87,7 @@ public class Hex {
     }
 
     public boolean hasTotoro(){
-        if(totoro > 0)
+        if(totoro > 0 && totoro < 2)
             return true;
         return false;
     }
