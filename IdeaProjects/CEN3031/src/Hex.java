@@ -6,11 +6,13 @@ public class Hex {
     private final Terrain terrain;
     private final int N = 6;
     private int level;
-    public Hex adjHex[];
-    private boolean isSpace;
+    //public int getAdjHex[];
+    public int indexX, indexY;
+    private boolean isEmpty;
     private Tile tile;
     private int meeple;
     private int totoro;
+    private int tiger;
     private int settlementID;
     public int radius;
     public int distance;
@@ -18,43 +20,35 @@ public class Hex {
 
     //The constructor for the hex class
     public Hex() {
-        isSpace = true;
         level = 0;
         terrain = null;
         tile = null;
-        adjHex = new Hex[N];
+        //adjHex = new Hex[N];
         meeple = 0;
         totoro = 0;
+        tiger = 0;
         settlementID = -1;
         radius = 0;
         distance = 0;
         owner = null;
+        indexX = -1;
+        indexY = -1;
     }
 
     public Hex(Terrain type) {
 
         terrain = type;
         level = 0;
-        isSpace = false;
         tile = null;
-        adjHex = new Hex[N];
+        indexX = -1;
+        indexY = -1;
         meeple = 0;
         totoro = 0;
+        tiger = 0;
         settlementID = -1;
         radius = 0;
         distance = 0;
         owner = null;
-
-        for (int i = 0; i < 6; i++) {
-            adjHex[i] = new Hex();
-            adjHex[i].adjHex[(i + 3) % 6] = this;
-            if(i != 0)
-                adjHex[i].adjHex[(i+4)%6] = adjHex[i-1];
-        }
-        adjHex[0].adjHex[4] = adjHex[5];
-        for (int i = 0; i < 6; i++){
-            adjHex[i].adjHex[(i+2)%6] = adjHex[(i+1)%6];
-        }
     }
 
     //Getter for Hex terrain
@@ -62,8 +56,10 @@ public class Hex {
         return terrain;
     }
 
-    public boolean isSpace() {
-        return isSpace;
+    public boolean isEmpty() {
+        if(owner == null && meeple == 0 && tiger == 0 && totoro == 0)
+            return true;
+        return false;
     }
 
     //Getter for Hex terrain
@@ -79,18 +75,6 @@ public class Hex {
     //Setter for level
     public void setLevel(int level) {
         this.level = level;
-    }
-
-
-    public void updateAdjHexes() {
-        for (int i = 0; i < 6 && adjHex[i] != null; i++) {
-            adjHex[i].adjHex[(i + 3) % 6] = this;
-        }
-    }
-
-    public void updateAdjHexes(int index) {
-        if(adjHex[index] != null)
-            adjHex[index].adjHex[(index + 3) % 6] = this;
     }
 
     public Tile getTile() {
@@ -112,15 +96,43 @@ public class Hex {
     }
 
     public void setMeeple(int meeple) {
-        this.meeple = meeple;
+        if(meeple >= 0)
+            this.meeple = meeple;
     }
+
+    public void addMeeple(){
+        this.meeple = this.level;
+    }
+
+    public void addTotoro(){
+        this.totoro = 1;
+    }
+
+    public void addTiger(){
+        this.tiger = 1;
+    }
+
 
     public int getTotoro() {
         return totoro;
     }
 
     public void setTotoro(int totoro) {
-        this.totoro = totoro;
+        if (totoro == 0 || totoro == 1)
+            this.totoro = totoro;
+    }
+
+    public int getTiger() {
+        return tiger;
+    }
+
+    public void setTiger(int tiger) {
+        if(tiger == 0 || tiger == 1)
+            this.tiger = tiger;
+    }
+
+    public boolean hasTiger(){
+        return tiger > 0;
     }
 
     public int getSettlementID() {
@@ -134,4 +146,6 @@ public class Hex {
     public Player getOwner(){
         return owner;
     }
+
+
 }
