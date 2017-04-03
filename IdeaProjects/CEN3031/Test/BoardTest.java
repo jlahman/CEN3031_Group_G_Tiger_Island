@@ -20,8 +20,8 @@ public class BoardTest {
         Tile t1 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
         assertEquals(t1.getTileHex(0), b.rootHex);
-        assertEquals(t1.getTileHex(1), b.rootHex.adjHex[0]);
-        assertEquals(t1.getTileHex(2), b.rootHex.adjHex[1]);
+        assertEquals(t1.getTileHex(1), b.getAdjHex(b.rootHex, 0));
+        assertEquals(t1.getTileHex(2), b.getAdjHex(b.rootHex, 1));
     }
 
     @Test
@@ -30,9 +30,11 @@ public class BoardTest {
         Tile t1 = new Tile(TileType.JJ);
         Tile t2 = new Tile(TileType.GG);
         b.placeTile(t1, b.rootHex, 0);
-        b.placeTile(t2, b.rootHex.adjHex[1].adjHex[3], 1);
-        assertEquals(t2.getTileHex(1), b.rootHex.adjHex[2]);
-        assertEquals(t2.getTileHex(1), b.rootHex.adjHex[1].adjHex[3]);
+        b.placeTile(t2, b.getAdjHex(t1.getTileHex(2), 3), 1);
+        assertEquals(t2.getTileHex(1), b.getAdjHex(b.rootHex, 2));
+        assertEquals(t2.getTileHex(0), b.getAdjHex(b.getAdjHex(b.rootHex, 2), 3));
+        assertEquals(t2.getTileHex(2), b.getAdjHex(b.getAdjHex(b.rootHex, 2), 2));
+
     }
 
     @Test
@@ -42,10 +44,11 @@ public class BoardTest {
         Tile t2 = new Tile(TileType.GG);
         t2.setOrientation(1);
         b.placeTile(t1, b.rootHex, 0);
-        b.placeTile(t2, b.rootHex.adjHex[1].adjHex[2], 1);
-        assertEquals(t2.getTileHex(0), b.rootHex.adjHex[2]);
-        assertEquals(t2.getTileHex(0), b.rootHex.adjHex[1].adjHex[3]);
-        assertEquals(t2.getTileHex(1), b.rootHex.adjHex[1].adjHex[2]);
+       // b.placeTile(t2, b.rootHex.indexX + 1, b.rootHex.indexY, 1);
+        b.placeTile(t2,  b.getAdjHex(t1.getTileHex(2), 2), 1);
+        assertEquals(t2.getTileHex(0), b.getAdjHex(b.rootHex, 2));
+        assertEquals(t2.getTileHex(1), b.getAdjHex(b.getAdjHex(b.rootHex, 1), 2));
+        assertEquals(t2.getTileHex(2), b.getAdjHex(b.getAdjHex(b.rootHex, 2), 2));
 
     }
 
@@ -55,8 +58,8 @@ public class BoardTest {
         Tile t1 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
         assertEquals(1, b.rootHex.getLevel());
-        assertEquals(1, b.rootHex.adjHex[0].getLevel());
-        assertEquals(1, b.rootHex.adjHex[1].getLevel());
+        assertEquals(1, t1.getTileHex(1).getLevel());
+        assertEquals(1, t1.getTileHex(2).getLevel());
     }
 
     @Test
@@ -66,12 +69,12 @@ public class BoardTest {
         Tile t2 = new Tile(TileType.JJ);
         Tile t3 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
-        b.placeTile(t2, b.rootHex.adjHex[2], 1);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
         t3.setOrientation(1);
         b.placeTile(t3, b.rootHex,0);
         assertEquals(2, b.rootHex.getLevel());
-        assertEquals(1, b.rootHex.adjHex[0].getLevel());
-        assertEquals(2, b.rootHex.adjHex[1].getLevel());
+        assertEquals(1, b.getAdjHex(b.rootHex, 0).getLevel());
+        assertEquals(2, b.getAdjHex(b.rootHex, 1).getLevel());
     }
 
     @Test
@@ -82,14 +85,14 @@ public class BoardTest {
         Tile t3 = new Tile(TileType.JJ);
         Tile t4 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
-        b.placeTile(t2, b.rootHex.adjHex[2], 1);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
         t3.setOrientation(1);
         b.placeTile(t3, b.rootHex,0);
         b.placeTile(t4, b.rootHex,0);
         assertFalse(b.isPlacementValid(t4, b.rootHex, 0));
         assertEquals(2, b.rootHex.getLevel());
-        assertEquals(1, b.rootHex.adjHex[0].getLevel());
-        assertEquals(2, b.rootHex.adjHex[1].getLevel());
+        assertEquals(1, b.getAdjHex(b.rootHex, 0).getLevel());
+        assertEquals(2, b.getAdjHex(b.rootHex, 1).getLevel());
     }
 
     @Test
@@ -99,7 +102,7 @@ public class BoardTest {
         Tile t2 = new Tile(TileType.JJ);
         Tile t3 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
-        b.placeTile(t2, b.rootHex.adjHex[2], 1);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
         t3.setOrientation(1);
         assertTrue(b.isPlacementValid(t3, b.rootHex, 0));
     }
@@ -111,7 +114,7 @@ public class BoardTest {
         Tile t2 = new Tile(TileType.JJ);
         Tile t3 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
-        b.placeTile(t2, b.rootHex.adjHex[2], 1);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
         t3.setOrientation(2);
         assertFalse(b.isPlacementValid(t3, b.rootHex, 2));
     }
@@ -123,13 +126,28 @@ public class BoardTest {
         Tile t2 = new Tile(TileType.JJ);
         Tile t3 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
-        b.placeTile(t2, b.rootHex.adjHex[2], 1);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
         t3.setOrientation(1);
         assertTrue(b.isPlacementValid(t3, b.rootHex, 0));
-        b.rootHex.adjHex[1].setTotoro(1);
+        b.getAdjHex(b.rootHex,1).setTotoro(1);
         assertFalse(b.isPlacementValid(t3, b.rootHex, 0));
     }
 
+    @Test
+    public void placementInvalidIfNukingSizeOneSettlementTest() throws Exception{
+        b = new Board();
+        Tile t1 = new Tile(TileType.JJ);
+        Tile t2 = new Tile(TileType.JJ);
+        Tile t3 = new Tile(TileType.JJ);
+        b.placeTile(t1, b.rootHex, 0);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
+        t3.setOrientation(1);
+        assertTrue(b.isPlacementValid(t3, b.rootHex, 0));
+        b.settlementList.add(new Settlement(t2.getTileHex(1),0));
+        t2.getTileHex(1).setSettlementID(0);
+        assertFalse(b.isPlacementValid(t3, b.rootHex, 0));
+
+    }
     @Test
     public void placementValidIfNukingSizeNotOneSettlementTest() throws Exception{
         b = new Board();
@@ -137,28 +155,41 @@ public class BoardTest {
         Tile t2 = new Tile(TileType.JJ);
         Tile t3 = new Tile(TileType.JJ);
         b.placeTile(t1, b.rootHex, 0);
-        b.settlementList.add(new Settlement());
-        b.placeTile(t2, b.rootHex.adjHex[2], 1);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
         t3.setOrientation(1);
         assertTrue(b.isPlacementValid(t3, b.rootHex, 0));
-        b.rootHex.adjHex[1].setSettlementID(0);
-        b.settlementList.get(0).addHex(b.rootHex.adjHex[1]);
-        b.rootHex.adjHex[0].setSettlementID(0);
-        b.settlementList.get(0).addHex(b.rootHex.adjHex[0]);
+        b.settlementList.add(new Settlement(t2.getTileHex(1),0));
+        b.settlementList.get(0).addHex(t2.getTileHex(2));
         assertTrue(b.isPlacementValid(t3, b.rootHex, 0));
+
+    }
+
+    @Test
+    public void placementInvalidIfNukingSizeTwoOneSettlementTest() throws Exception{
+        b = new Board();
+        Tile t1 = new Tile(TileType.JJ);
+        Tile t2 = new Tile(TileType.JJ);
+        Tile t3 = new Tile(TileType.JJ);
+        b.placeTile(t1, b.rootHex, 0);
+        b.placeTile(t2, b.getAdjHex(b.rootHex, 2), 1);
+        t3.setOrientation(1);
+        assertTrue(b.isPlacementValid(t3, b.rootHex, 0));
+        b.settlementList.add(new Settlement(t2.getTileHex(1),0));
+        b.settlementList.get(0).addHex(t1.getTileHex(2));
+        assertFalse(b.isPlacementValid(t3, b.rootHex, 0));
+
     }
 
     @Test
     public void BoardCreationTest() throws Exception {
         assertTrue(b instanceof Board);
     }
-
-
-
-}
-
 /*
- @After
+@After
     public void tearDown() throws Exception {
     }
  */
+
+}
+
+
