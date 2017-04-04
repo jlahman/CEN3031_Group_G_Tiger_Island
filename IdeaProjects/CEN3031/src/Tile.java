@@ -11,7 +11,7 @@ public class Tile{
 
     /*Tile constructor*/
     public Tile(TileType tileType){
-
+        type = tileType;
         Terrain terrainOne = getTerrainOne(tileType);
         Terrain terrainTwo = getTerrainTwo(tileType);
         /*Create new hexes for the tile*/

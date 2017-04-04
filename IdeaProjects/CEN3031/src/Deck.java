@@ -2,12 +2,12 @@
  * Created by kevin on 3/15/2017.
  */
 public class Deck {
-    public static void main(String[] args) {
+   // public static void main(String[] args) {
 
-        Deck deckOne = new Deck();
-        System.out.println(deckOne.showTileInDeck(1));
+     //   Deck deckOne = new Deck();
+       // System.out.println(deckOne.showTileInDeck(1));
         //System.out.println(deckOne.drawTile());
-    }
+    //}
     private Tile[] deck;
     private int tilesUsed; //how many tiles have been used from the deck
 
@@ -43,8 +43,9 @@ public class Deck {
         if (tilesUsed == deck.length) {
             throw new IllegalStateException("No tiles left in the deck");
         }
-        tilesUsed++;
+
         Tile t = deck[tilesUsed];
+        tilesUsed++;
         return t;
     }
     //Returns the amount of unused tiles

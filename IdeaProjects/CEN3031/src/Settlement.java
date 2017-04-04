@@ -27,6 +27,7 @@ public class Settlement {
     public void addHex(Hex hex){
         hexesInSettlement.add(hex);
         hex.setSettlementID(settlementID);
+        hex.setOwner(getOwner());
     }
 
     public Player getOwner(){

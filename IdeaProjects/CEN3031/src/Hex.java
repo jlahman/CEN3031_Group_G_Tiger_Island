@@ -14,9 +14,10 @@ public class Hex {
     private int totoro;
     private int tiger;
     private int settlementID;
-    public int radius;
-    public int distance;
-    public Player owner;
+
+
+
+    private Player owner;
 
     //The constructor for the hex class
     public Hex() {
@@ -28,8 +29,6 @@ public class Hex {
         totoro = 0;
         tiger = 0;
         settlementID = -1;
-        radius = 0;
-        distance = 0;
         owner = null;
         indexX = -1;
         indexY = -1;
@@ -46,8 +45,6 @@ public class Hex {
         totoro = 0;
         tiger = 0;
         settlementID = -1;
-        radius = 0;
-        distance = 0;
         owner = null;
     }
 
@@ -148,5 +145,8 @@ public class Hex {
         return owner;
     }
 
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
 
 }

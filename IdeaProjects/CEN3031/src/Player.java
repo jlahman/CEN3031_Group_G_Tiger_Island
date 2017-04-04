@@ -2,11 +2,16 @@ public class Player {
     private int meepleCount;
     private int totoroCount;
     private int tigerCount;
+    private int score;
+    private String name;
 
-    public Player() {
+
+    public Player(String name) {
         setMeepleCount(20);
         setTotoroCount(3);
         setTigerCount(2);
+        score = 0;
+        this.name = name;
     }
 
     public void setMeepleCount(int meepleCount) {
@@ -34,5 +39,13 @@ public class Player {
 
     public int getTigerCount() {
         return tigerCount;
+    }
+
+    public void increaseScore(int delta){
+        score = score + delta;
+    }
+
+    public int getScore(){
+        return score;
     }
 }
