@@ -49,6 +49,30 @@ public class TileStepDefs implements En {
         throw new PendingException();
     }
 
+    @And("^The most recent tile placed has a volcano hex that is directly above another volcano hex$")
+    public void theMostRecentTilePlacedHasAVolcanoHexThatIsDirectlyAboveAnotherVolcanoHex() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^The most recent tile placed has all three hexes covering another (\\d+) hexes directly underneath it$")
+    public void theMostRecentTilePlacedHasAllThreeHexesCoveringAnotherHexesDirectlyUnderneathIt(int arg0) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^The hexes of the most recent tile placed are spanning above either exactly two or exactly three tiles beneath it$")
+    public void theHexesOfTheMostRecentTilePlacedAreSpanningAboveEitherExactlyTwoOrExactlyThreeTilesBeneathIt() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^None of the hexes of the most recent tile placed are being placed above a hex that contains a totoro$")
+    public void noneOfTheHexesOfTheMostRecentTilePlacedAreBeingPlacedAboveAHexThatContainsATotoro() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
     @When("^User places such a tile$")
     public void userPlacesSuchATile() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
