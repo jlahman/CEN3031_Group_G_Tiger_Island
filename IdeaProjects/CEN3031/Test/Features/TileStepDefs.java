@@ -55,7 +55,7 @@ public class TileStepDefs implements En {
         throw new PendingException();
     }
 
-    @And("^The most recent tile placed has all three hexes covering another (\\d+) hexes directly underneath it$")
+    @And("^The most recent tile placed has all three hexes covering another three hexes directly underneath it$")
     public void theMostRecentTilePlacedHasAllThreeHexesCoveringAnotherHexesDirectlyUnderneathIt(int arg0) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
