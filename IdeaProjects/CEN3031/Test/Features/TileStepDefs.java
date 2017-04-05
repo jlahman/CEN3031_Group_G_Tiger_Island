@@ -5,9 +5,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.api.java8.En;
 
-/**
- * Created by kevin on 3/25/2017.
- */
 public class TileStepDefs implements En {
 
     @Given("^No tiles have been placed on the board$")
