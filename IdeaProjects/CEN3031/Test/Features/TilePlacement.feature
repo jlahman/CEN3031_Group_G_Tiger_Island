@@ -1,6 +1,11 @@
 Feature: TilePlacement
 
   Scenario: Tile placement creates a new island
+    Given No tiles have been placed on the board
+    When User places such a tile
+    Then Update the game board with placed tile
+
+  Scenario: Tile placement creates a new island
     Given There are existing tiles on the board
     And The most recent tile placed has no adjacent tiles
     When User places such a tile

@@ -10,6 +10,12 @@ import cucumber.api.java8.En;
  */
 public class TileStepDefs implements En {
 
+    @Given("^No tiles have been placed on the board$")
+    public void noTilesHaveBeenPlacedOnTheBoard() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
     @Given("^There are existing tiles on the board$")
     public void thereAreExistingPreviousTiles() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
