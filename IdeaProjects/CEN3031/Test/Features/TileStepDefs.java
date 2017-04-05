@@ -9,19 +9,51 @@ import cucumber.api.java8.En;
  * Created by kevin on 3/25/2017.
  */
 public class TileStepDefs implements En {
-    @Given("^Existing tiles$")
-    public void game_exists() throws  Throwable{
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-    @And("^Tile placed has no adjacent tiles$")
-    public void tile_placed_with_no_adjacent_tiles() throws Throwable{
+
+    @Given("^There are existing tiles on the board$")
+    public void thereAreExistingPreviousTiles() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
 
-    @Given("^There are existing previous tiles$")
-    public void thereAreExistingPreviousTiles() throws Throwable {
+    @And("^The most recent tile placed has no adjacent tiles$")
+    public void tile_placed_with_no_adjacent_tiles() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^The most recent tile placed has adjacent tiles$")
+    public void tilePlacedHasAdjacentTiles() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^The volcano hex on most recent tile placed does not cover a volcano hex on board$")
+    public void theVolcanoHexOnMostRecentTilePlacedDoesNotCoverAVolcanoHexOnBoard() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^The most recent tile placed covers exactly one tile$")
+    public void tileCoversExactlyOneTile() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^A hex of the placed tile does not have a hex of a tile directly underneath$")
+    public void aHexOfThePlacedTileDoesNotHaveAHexOfATileDirectlyUnderneath() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @And("^The most recent tile placed has at least one hex that does not have a hex underneath it$")
+    public void theMostRecentTilePlacedHasAtLeastOneHexThatDoesNotHaveAHexUnderneathIt() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @When("^User places such a tile$")
+    public void userPlacesSuchATile() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
@@ -32,20 +64,8 @@ public class TileStepDefs implements En {
         throw new PendingException();
     }
 
-    @When("^Volcano hex does not cover a volcano hex$")
-    public void volcanoHexDoesNotCoverAVolcanoHex() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
-    @And("^Tile covers exactly one tile$")
-    public void tileCoversExactlyOneTile() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
-    @And("^A hex of the placed tile does not have a hex of a tile directly underneath$")
-    public void aHexOfThePlacedTileDoesNotHaveAHexOfATileDirectlyUnderneath() throws Throwable {
+    @Then("^Update the game board with placed tile$")
+    public void updateTheGameBoardWithPlacedTile() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
