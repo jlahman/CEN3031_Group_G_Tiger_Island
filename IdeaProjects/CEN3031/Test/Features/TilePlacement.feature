@@ -19,12 +19,14 @@ Feature: TilePlacement
     Then Output tile placement error and end game such that current player loses
 
   Scenario: Tile placement adds to elevation illegally due to illegally covering entire tile
-     Given There are existing tiles on the board
-     And The most recent tile placed covers exactly one tile
-     And A hex of the placed tile does not have a hex of a tile directly underneath
+    Given There are existing tiles on the board
+    And The most recent tile placed covers exactly one tile
+    When User places such a tile
+    Then Output tile placement error and end game such that current player loses
 
   Scenario: Tile placement adds to elevation illegally due to introduction of elevation gap
-     Given There are existing tiles on the board
-     And The most recent tile placed has at least one hex that does not have a hex underneath it
-     And A hex of the placed tile does not have a hex of a tile directly underneath
+    Given There are existing tiles on the board
+    And The most recent tile placed has at least one hex that does not have a hex underneath it
+    When User places such a tile
+    Then Output tile placement error and end game such that current player loses
 

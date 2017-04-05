@@ -40,12 +40,6 @@ public class TileStepDefs implements En {
         throw new PendingException();
     }
 
-    @And("^A hex of the placed tile does not have a hex of a tile directly underneath$")
-    public void aHexOfThePlacedTileDoesNotHaveAHexOfATileDirectlyUnderneath() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
     @And("^The most recent tile placed has at least one hex that does not have a hex underneath it$")
     public void theMostRecentTilePlacedHasAtLeastOneHexThatDoesNotHaveAHexUnderneathIt() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
