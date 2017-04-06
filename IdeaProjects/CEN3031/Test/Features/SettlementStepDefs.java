@@ -59,13 +59,7 @@ public class SettlementStepDefs {
         throw new PendingException();
     }
 
-    @When("^User creates settlement on volcanic hex$")
-    public void userCreatesSettlementOnVolcanicHex() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
-    @When("^User creates settlement on terrain hex$")
+    @When("^User creates settlement$")
     public void userCreatesSettlement() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
