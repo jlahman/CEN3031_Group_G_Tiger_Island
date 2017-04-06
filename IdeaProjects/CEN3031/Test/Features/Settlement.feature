@@ -38,3 +38,12 @@ Feature: Settlement
     And User does not have enough meeples to expand
     When User expands settlement
     Then Output settlement expansion error message and end game such that current player loses
+
+  Scenario: Player legally expands settlement
+    Given Current user placed a tile
+    And It is the current user's turn
+    And User has at least one settlement
+    And User has enough meeples to expand
+    And Adjacent terrain to be expanded to matches the current hex's terrain
+    When User expands settlement
+    Then Expand settlement and update settlement size, settlement list, and hexes in settlement

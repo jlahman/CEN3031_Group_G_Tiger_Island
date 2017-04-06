@@ -53,6 +53,12 @@ public class SettlementStepDefs {
         throw new PendingException();
     }
 
+    @And("^Adjacent terrain to be expanded to matches the current hex's terrain$")
+    public void adjacentTerrainToBeExpandedToMatchesTheCurrentHexSTerrain() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
     @When("^User creates settlement on volcanic hex$")
     public void userCreatesSettlementOnVolcanicHex() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -85,6 +91,12 @@ public class SettlementStepDefs {
 
     @Then("^Output settlement expansion error message and end game such that current player loses$")
     public void outputSettlementExpansionErrorMessageAndEndGameSuchThatCurrentPlayerLoses() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @Then("^Expand settlement and update settlement size, settlement list, and hexes in settlement$")
+    public void expandSettlementAndUpdateSettlementSizeSettlementListAndHexesInSettlement() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
