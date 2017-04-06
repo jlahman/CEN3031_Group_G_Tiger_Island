@@ -46,4 +46,10 @@ public class SettlementStepDefs {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
+
+    @Then("^Create a new settlement of size one and place one meeple on the hex$")
+    public void createANewSettlementOfSizeOneAndPlaceOneMeepleOnTheHex() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
 }
