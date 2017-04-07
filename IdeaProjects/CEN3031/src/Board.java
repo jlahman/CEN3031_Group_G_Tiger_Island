@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -8,12 +9,12 @@ public class Board {
     public Hex rootHex;
     public List<Settlement> settlementList = new Vector<Settlement>();
     public Hex hexArr[][];
-    private int tileNumber = 48;
+    private int tileNumber = 48*2*2;
 
     public Board(){
         rootHex = new Hex();
 
-        hexArr = new Hex[2*tileNumber][2*tileNumber];
+        hexArr = new Hex[tileNumber][tileNumber];
         rootHex.indexX = rootHex.indexY = tileNumber/2;
         hexArr[rootHex.indexX][rootHex.indexY] = rootHex;
         for(int i = 0; i < 6; i++){
@@ -38,6 +39,70 @@ public class Board {
         }
     }
 
+    private void updateSettlementList( Hex oldHex){
+        if(oldHex.getSettlementID() != -1){
+            int oldID = oldHex.getSettlementID();
+            Settlement temp = settlementList.get(oldID);
+            temp.removeHex(oldHex);
+
+            List<Hex> tList = new Vector<Hex>();
+            List<List<Hex>> settlementsToMake = new Vector<List<Hex>>();
+
+            for(int i = 0; i < 6; i++){
+                if(temp.hexesInSettlement.contains(getAdjHex(oldHex, i))){
+                    tList.add(getAdjHex(oldHex, i));
+                }
+            }
+            for (Hex hex : tList) {
+                boolean contains = false;
+                List<Hex> BFSList = BFSForSettlement(hex);
+                for(List<Hex> hexList : settlementsToMake){
+                    if(hexList.containsAll(BFSList)){
+                        contains = true;
+                        break;
+                    }
+                }
+                if(contains == false)
+                    settlementsToMake.add(BFSList);
+            }
+
+            if(settlementsToMake.size() > 1) {
+                for (List<Hex> hexList : settlementsToMake) {
+                    int settlementID = settlementList.size();
+                    settlementList.add(new Settlement(hexList, settlementID));
+                }
+                settlementList.remove(oldHex.getSettlementID());
+            }
+        }
+    }
+
+    private List<Hex> BFSForSettlement(Hex hex){
+        List<Hex> temp = Collections.emptyList();
+        boolean quit = false;
+        Hex current = hex;
+        int ID = hex.getSettlementID();
+        int index = -1;
+        while (!quit) {
+            for (int i = 0; i < 6; i++) {
+                if(getAdjHex(current, i) != null) {
+                    if (getAdjHex(current, i).getSettlementID() == ID) {
+                        if (!temp.contains(getAdjHex(current, i))) {
+                            temp.add(getAdjHex(current, i));
+                        }
+                    }
+                }
+            }
+            if(index == temp.size() - 1)
+                quit = true;
+            else {
+                index++;// = temp.indexOf(current) + 1;
+                current = temp.get(index);
+            }
+
+        }
+        return temp;
+    }
+
     private void placeHex(Hex newHex, Hex oldHex){
 
         newHex.indexX = oldHex.indexX;
@@ -51,17 +116,8 @@ public class Board {
 
         if(oldHex == rootHex)
             rootHex = newHex;
-    }
 
-    private void placeHex(Hex newHex, int x, int y){
-
-        newHex.indexX = x;
-        newHex.indexY = y;
-
-        hexArr[newHex.indexX][newHex.indexY] = newHex;
-        updateAdjHexes(hexArr[newHex.indexX][newHex.indexY]);
-
-        newHex.setLevel(1);
+        updateSettlementList(oldHex);
     }
 
     private void updateAdjHexes(Hex hex){
@@ -124,6 +180,7 @@ public class Board {
             case 4: tempX = (hex.indexX - 1)%tileNumber;
                 break;
             case 5: tempX = (hex.indexX - 1)%tileNumber;
+                break;
         }
         return tempX;
     }
@@ -142,6 +199,7 @@ public class Board {
             case 4: tempY = (hex.indexY + 1)%tileNumber;
                 break;
             case 5: tempY = hex.indexY;
+                break;
         }
         return tempY;
     }
@@ -318,4 +376,22 @@ public class Board {
     public void debug(int i){
 
     }
+
+    public void draw(){
+        String temp = "Game Board: \n";
+        for(int i = 0; i < 2*tileNumber; i ++){
+            for(int j = 0; j < 2*tileNumber; j++){
+                if(hexArr[j][i] == null)
+                    temp += "[\t\tnull\t\t]";
+                else if(hexArr[j][i].getTerrain() == null)
+                    temp += "[\t\tspace\t\t]";
+                else
+                    temp += "[\t\t" + hexArr[j][i].getTerrainAsString() + "\t\t]";
+            }
+            temp += "\n";
+        }
+
+        System.out.print(temp);
+    }
+
 }

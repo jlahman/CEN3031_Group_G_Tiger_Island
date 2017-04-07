@@ -8,12 +8,20 @@ import java.util.Vector;
 public class Settlement {
 
     private int settlementID;
-    public List<Hex> hexesInSettlement = new Vector<>();
+    public List<Hex> hexesInSettlement = new Vector<Hex>();
 
     public Settlement(Hex hex, int ID){
         hexesInSettlement.add(hex);
         settlementID = ID;
         hex.setSettlementID(settlementID);
+    }
+
+    public Settlement(List<Hex> hexList, int ID){
+        hexesInSettlement = hexList;
+        settlementID = ID;
+        for (Hex hex : hexesInSettlement){
+            hex.setSettlementID(settlementID);
+        }
     }
 
     public int getSettlementID() {
@@ -28,6 +36,10 @@ public class Settlement {
         hexesInSettlement.add(hex);
         hex.setSettlementID(settlementID);
         hex.setOwner(getOwner());
+    }
+
+    public void removeHex(Hex hex){
+        hexesInSettlement.remove(hex);
     }
 
     public Player getOwner(){
