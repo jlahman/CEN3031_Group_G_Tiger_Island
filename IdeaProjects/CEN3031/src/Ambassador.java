@@ -8,6 +8,7 @@ import java.net.Socket;
  * Created by madashi on 4/6/17.
  */
 public class Ambassador {
+    ///*
     private static String CRLF = "\r\n";
     private AI gameController1;
     private AI gameController2;
@@ -127,58 +128,10 @@ public class Ambassador {
             gameController2.startNewGame();
         }
         else if(message[0].equals("MAKE")){
-            Tile tile = getTileFromString(message[message.length - 1]);
-            String gid = message[5];
-            int time = toInt(message[7]) * 1000;
-            if(gameController1.getGID() == null){
-                gameController1.setGID(gid);
-                reply = getMoveAsString(gameController1.playMove(tile, time));
-            }
-            else if (gameController2.getGID() == null) {
-                gameController2.setGID(gid);
-                reply = getMoveAsString(gameController2.playMove(tile, time));
-            }
-            else if(gid.equals(gameController1.getGID())){
-                reply = getMoveAsString(gameController1.playMove(tile, time));
-            }
-            else{
-                reply = getMoveAsString(gameController2.playMove(tile, time));
-            }
+            reply = actionMakeMove(message);
         }
         else if(message[0].equals("GAME")){
-            if(message[6].equals("PLACED")){
-                if(!pid.equals(message[5])){
-                    String gid = message[1];
-                    Tile tile = getTileFromString(message[7]);
-                    int x = getCoordX(toInt(message[9]), toInt(message[10], toInt(message[11])));
-                    int y = getCoordY(toInt(message[9]), toInt(message[10], toInt(message[11])));
-                    int orientation = toInt(message[12]);
-                    if(gid.equals(gameController1.getGID())){
-                        gameController1.updateWithEnemyMove(tile, x, y, orientation, //build params)
-                    }
-                    else{
-                        //controller2 same
-                    }
-                }
-            }
-            else if(message[2].equals("OVER")){
-                String gid = message[1];
-                if(gid.equals(gameController1.getGID())){
-                    gameController1.endGame();
-                }
-                else{
-                    gameController2.endGame();
-                }
-            }
-            else{
-                String gid = message[1];
-                if(gid.equals(gameController1.getGID())){
-                    gameController1.endGame();
-                }
-                else{
-                    gameController2.endGame();
-                }
-            }
+            actionGameUpdate(message);
         }
         else if(message[0].equals("END")){
             if(message[2].equals("ROUND")){
@@ -200,7 +153,104 @@ public class Ambassador {
 
     }
 
+    private void actionGameUpdate(String[] message) {
+        if(message[6].equals("PLACED")){
+            if(!pid.equals(message[5])){
+                String gid = message[1];
+                Tile tile = getTileFromString(message[7]);
+                int x = getCoordX(toInt(message[9]), toInt(message[10], toInt(message[11])));
+                int y = getCoordY(toInt(message[9]), toInt(message[10], toInt(message[11])));
+                int orientation = toInt(message[12]);
+                if(gid.equals(gameController1.getGID())){
+                    gameController1.updateWithEnemyMove(tile, x, y, orientation, //build params)
+                }
+                else{
+                    //controller2 same
+                }
+            }
+        }
+        else if(message[2].equals("OVER")){
+            String gid = message[1];
+            if(gid.equals(gameController1.getGID())){
+                gameController1.endGame();
+            }
+            else{
+                gameController2.endGame();
+            }
+        }
+        else{
+            String gid = message[1];
+            if(gid.equals(gameController1.getGID())){
+                gameController1.endGame();
+            }
+            else{
+                gameController2.endGame();
+            }
+        }
+    }
+
+    private Tile getTileFromString(String tile){
+        String[] tileArr = tile.split("\\+");
+        String temp = "";
+        switch (tileArr[0].charAt(0)){
+            case 'J': temp = "Jungle-";
+                break;
+            case 'L': temp = "Lake-";
+                break;
+            case 'G': temp = "Grasslands-";
+                break;
+            case 'R': temp = "Rockey-";
+                break;
+        }
+        switch (tileArr[1].charAt(0)){
+            case 'J': temp += "Jungle";
+                break;
+            case 'L': temp += "Lake";
+                break;
+            case 'G': temp += "Grasslands";
+                break;
+            case 'R': temp += "Rockey";
+                break;
+        }
+        return new Tile(TileType.valueOf(temp));
+    }
+
+    private int toInt(String s){
+        return 1;//;figure how to caste string to int.
+    }
+
+    private int getCoordX(int x, int y, int z){
+        return x;
+    }
+
+    private int getCoordY(int x, int y, int z){
+        return z;
+    }
+
+    private String actionMakeMove(String[] message) {
+        String reply;
+        Tile tile = getTileFromString(message[message.length - 1]);
+        String gid = message[5];
+        int time = toInt(message[7]) * 1000;
+        if(gameController1.getGID() == null){
+            gameController1.setGID(gid);
+            reply = getMoveAsString(gameController1.playMove(tile, time));
+        }
+        else if (gameController2.getGID() == null) {
+            gameController2.setGID(gid);
+            reply = getMoveAsString(gameController2.playMove(tile, time));
+        }
+        else if(gid.equals(gameController1.getGID())){
+            reply = getMoveAsString(gameController1.playMove(tile, time));
+        }
+        else{
+            reply = getMoveAsString(gameController2.playMove(tile, time));
+        }
+        return reply;
+    }
+
     private String getMoveAsString(String move){
         //get the move the AI wants to make, then format it correctly
     }
+    //*/
 }

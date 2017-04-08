@@ -76,6 +76,19 @@ public class Board {
         }
     }
 
+    private void checkForAdjSettlements(){
+        //for each settlement in list,
+            //check if adj to any other settlement owned by same player
+                //if adj combine the two, updating hex list and settlement id
+        /*for(Settlement settlement: settlementList){
+            List<Settlement> temp;
+            temp = getAdjSettlement(settlement);
+            if(temp.size() > 0){
+                combineSettlements(settlement, temp);
+            }
+        }*/
+    }
+
     private List<Hex> BFSForSettlement(Hex hex){
         List<Hex> temp = Collections.emptyList();
         boolean quit = false;

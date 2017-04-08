@@ -41,7 +41,7 @@ public class Tile{
         return str;
     }
 
-    public int getTilelevel() {
+    public int getTilelevel () {
         return hexes[0].getLevel();
     }
 
