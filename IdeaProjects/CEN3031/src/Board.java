@@ -8,6 +8,7 @@ import java.util.Vector;
 public class Board {
     public Hex rootHex;
     public List<Settlement> settlementList = new Vector<Settlement>();
+    public List<Hex> playedHexes = new Vector<Hex>();
     public Hex hexArr[][];
     private int tileNumber = 48*2*2;
 
@@ -114,6 +115,9 @@ public class Board {
 
         newHex.setLevel(oldHex.getLevel() + 1);
 
+        playedHexes.remove(oldHex);
+        playedHexes.add(newHex);
+
         if(oldHex == rootHex)
             rootHex = newHex;
 
@@ -129,6 +133,7 @@ public class Board {
                 hexArr[tempX][tempY] = new Hex();
                 hexArr[tempX][tempY].indexX = tempX;
                 hexArr[tempX][tempY].indexY = tempY;
+                playedHexes.add(hexArr[tempX][tempY]);
             }
         }
     }

@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Created by madashi on 3/23/17.
+ * Created by Justin Lahman on 3/23/17.
  */
 public class Settlement {
 

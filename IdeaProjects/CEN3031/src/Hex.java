@@ -1,5 +1,5 @@
 /**
- * Created by madashi on 3/23/17.
+ * Created by Justin Lahman on 3/23/17.
  */
 public class Hex {
     //Hexes are made up of a terrain and level. Terrain is unchangeable.

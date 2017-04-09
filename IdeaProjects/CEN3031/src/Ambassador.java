@@ -5,11 +5,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * Created by madashi on 4/6/17.
+ * Created by Justin Lahman on 4/6/17.
  */
 public class Ambassador {
-/*
-    private static String CRLF = "\r\n";
+///*
+    private String CRLF;
     private AI gameController1;
     private AI gameController2;
 
@@ -18,6 +18,9 @@ public class Ambassador {
     private Socket mSocket;
     private PrintWriter out;
     private BufferedReader in;
+
+    private int moveNum1 = 1;
+    private int moveNum2 = 1;
 
     private boolean done;
     private String pid;
@@ -35,6 +38,7 @@ public class Ambassador {
         this.portNumber = portnumber;
         this.username = username;
         this.password = password;
+         CRLF = "\r\n";
     }
 
     public void init(){
@@ -92,7 +96,7 @@ public class Ambassador {
             reply = "ENTER THUNDERDOME " + password + CRLF;
         }
         else if(message[0].equals("TWO")){
-            reply = "I AM " + username + " " + password + CRLF;
+            reply = "I AM " + username + " " + username + CRLF;
         }
         else if(message[0].equals("WAIT") && message[3].equals("TOURNAMENT")){
             pid = message[message.length-1];
@@ -156,6 +160,7 @@ public class Ambassador {
                 }
 
                 if (gid.equals(gameController1.getGameID())) {
+                    moveNum1++;
                     if (message[13].equals("EXPANDED")) {
                         Terrain t = null;
                         switch (message[19].charAt(0)) {
@@ -178,6 +183,7 @@ public class Ambassador {
 
                 } else {
                     if (gid.equals(gameController2.getGameID())) {
+                        moveNum2++;
                         if (message[13].equals("EXPANDED")) {
                             Terrain t = null;
                             switch (message[19].charAt(0)) {
@@ -256,29 +262,99 @@ public class Ambassador {
     }
 
     private String actionMakeMove(String[] message) {
-        String reply;
+        String reply = "";
         Tile tile = getTileFromString(message[message.length - 1]);
         String gid = message[5];
+        String prefix = "";
+        prefix = "GAME " + gid + " " + "MOVE" + " ";
         int time = toInt(message[7]) * 1000;
         if(gameController1.getGameID() == null){
             gameController1.setGameID(gid);
-            reply = getMoveAsString(gameController1.playMove(tile, time));
+            reply = prefix + moveNum1 + " ";
+            reply += getMoveAsString(gameController1.playMove(tile, time));
         }
         else if (gameController2.getGameID() == null) {
             gameController2.setGameID(gid);
-            reply = getMoveAsString(gameController2.playMove(tile, time));
+            reply = prefix + moveNum2 + " ";;
+            reply += getMoveAsString(gameController2.playMove(tile, time));
         }
         else if(gid.equals(gameController1.getGameID())){
-            reply = getMoveAsString(gameController1.playMove(tile, time));
+            reply = prefix + moveNum1 + " ";;
+            reply += getMoveAsString(gameController1.playMove(tile, time));
         }
-        else{
-            reply = getMoveAsString(gameController2.playMove(tile, time));
+        else if(gid.equals(gameController2.getGameID())){
+            reply = prefix + moveNum2 + " ";;
+            reply += getMoveAsString(gameController2.playMove(tile, time));
         }
+
+        if(gid.equals(gameController1.getGameID()))
+            moveNum1++;
+        else if(gid.equals(gameController2.getGameID()))
+            moveNum2++;
         return reply;
     }
 
     private String getMoveAsString(String move){
-        return move += CRLF;
+        String[] temp = move.split("\\s+");
+        //reveiw
+        String tt = "";
+        switch(TileType.valueOf(temp[0])){
+            case JJ: tt = "JUNGLE+JUNGLE";
+            break;
+            case JG: tt = "JUNGLE+GRASS";
+            break;
+            case JL: tt = "JUNGLE+LAKE";
+            break;
+            case JR: tt = "JUNGLE+ROCK";
+            break;
+            case GJ: tt = "GRASS+JUNGLE";
+                break;
+            case GG: tt = "GRASS+GRASS";
+                break;
+            case GL: tt = "GRASS+LAKE";
+                break;
+            case GR: tt = "GRASS+ROCK";
+                break;
+            case LJ: tt = "LAKE+JUNGLE";
+                break;
+            case LG: tt = "LAKE+GRASS";
+                break;
+            case LL: tt = "LAKE+LAKE";
+                break;
+            case LR: tt = "LAKE+ROCK";
+                break;
+            case RJ: tt = "ROCK+JUNGLE";
+                break;
+            case RG: tt = "ROCK+GRASS";
+                break;
+            case RL: tt = "ROCK+LAKE";
+                break;
+            case RR: tt = "ROCK+ROCK";
+                break;
+        }
+
+        String buildText = "";
+        switch(toInt(temp[4])){
+            case 0: buildText = "FOUND SETTLEMENT AT ";
+            break;
+            case 1: buildText = "EXPAND SETTLEMENT AT ";
+            break;
+            case 2: buildText = "BUILD TOTORO SANCTUARY AT ";
+            break;
+            case 3: buildText = "BUILD TIGER PLAYGROUND AT ";
+            break;
+        }
+        String bleh = "PLACE " + tt + " " + to3D(toInt(temp[1]), toInt(temp[2])) + " " + temp[3] + " " + buildText + to3D(toInt(temp[1]), toInt(temp[2]));
+        if(toInt(temp[4]) == 1){
+            bleh += " " + temp[7];
+        }
+        return bleh += CRLF;
+    }
+
+    private String to3D(int x, int z){
+        int y = -1*(x+z);
+        String t = x + " " + y + " " + z;
+        return t;
     }
 
     public void setAI1(AI gameController1) {
@@ -294,5 +370,5 @@ public class Ambassador {
     public AI getAI2() {
         return gameController2;
     }
-    */
+    //*/
 }
