@@ -140,14 +140,14 @@ public class BuildOptionsTest {
         b.placeTile(t2, b.hexArr[b.rootHex.indexX+3][b.rootHex.indexY-1], 0);
         BO.expandSettlement(b, 0, Terrain.JUNGLE, p1);
         assertEquals(7, b.settlementList.get(0).settlementSize());
-        BO.buildTotoroSanctuary(b, b.getAdjHex(b.rootHex, 2), 0, p1);
+        BO.buildTotoroSanctuary(b, b.getAdjHex(b.rootHex, 2),  p1);
         assertTrue(b.getAdjHex(b.rootHex, 2).hasTotoro());
     }
 
     @Test
     public void buildTotoroSanctuaryWithLessThan5SizeTest() throws Exception {
         b.getAdjHex(b.rootHex, 0).setOwner(p1);
-        BO.buildTotoroSanctuary(b, b.getAdjHex(b.rootHex, 1), 0, p1);
+        BO.buildTotoroSanctuary(b, b.getAdjHex(b.rootHex, 1),  p1);
         assertFalse(b.getAdjHex(b.rootHex, 1).hasTotoro());
     }
 

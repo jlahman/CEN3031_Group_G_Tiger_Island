@@ -8,7 +8,7 @@ import java.net.Socket;
  * Created by madashi on 4/6/17.
  */
 public class Ambassador {
-
+/*
     private static String CRLF = "\r\n";
     private AI gameController1;
     private AI gameController2;
@@ -30,9 +30,11 @@ public class Ambassador {
 
     }
 
-    public Ambassador(String hostname, int portnumber){
+    public Ambassador(String hostname, int portnumber, String username, String password){
         this.hostName = hostname;
         this.portNumber = portnumber;
+        this.username = username;
+        this.password = password;
     }
 
     public void init(){
@@ -45,9 +47,11 @@ public class Ambassador {
         }
     }
 
-    public void init(String hostname, int portnumber){
+    public void init(String hostname, int portnumber, String username, String password){
         this.hostName = hostname;
         this.portNumber = portnumber;
+        this.username = username;
+        this.password = password;
 
         try{
             mSocket = new Socket(hostName, portNumber);
@@ -130,37 +134,85 @@ public class Ambassador {
     }
 
     private void actionGameUpdate(String[] message) {
-        if(message[6].equals("PLACED")){
-            if(!pid.equals(message[5])){
+        if (message[6].equals("PLACED")) {
+            if (!pid.equals(message[5])) {
                 String gid = message[1];
                 Tile tile = getTileFromString(message[7]);
-                int x = getCoordX(toInt(message[9]), toInt(message[10], toInt(message[11])));
-                int y = getCoordY(toInt(message[9]), toInt(message[10], toInt(message[11])));
+                int x = getCoordX(toInt(message[9]), toInt(message[10]), toInt(message[11]));
+                int y = getCoordY(toInt(message[9]), toInt(message[10]), toInt(message[11]));
                 int orientation = toInt(message[12]);
-                if(gid.equals(gameController1.getGID())){
-                    gameController1.updateWithEnemyMove(tile, x, y, orientation, //build params)
+
+                int xb = getCoordX(toInt(message[16]), toInt(message[17]), toInt(message[18]));
+                int yb = getCoordY(toInt(message[16]), toInt(message[17]), toInt(message[18]));
+
+                int bo = -1;
+
+                if (message[13].equals("FOUNDED")) {
+                    bo = 0;
+                } else if (message[14].equals("TOTORO")) {
+                    bo = 2;
+                } else if (message[14].equals("TIGER")) {
+                    bo = 3;
                 }
-                else{
-                    //controller2 same
+
+                if (gid.equals(gameController1.getGameID())) {
+                    if (message[13].equals("EXPANDED")) {
+                        Terrain t = null;
+                        switch (message[19].charAt(0)) {
+                            case 'J':
+                                t = Terrain.JUNGLE;
+                                break;
+                            case 'L':
+                                t = Terrain.LAKE;
+                                break;
+                            case 'G':
+                                t = Terrain.GRASSLANDS;
+                                break;
+                            case 'R':
+                                t = Terrain.ROCKY;
+                                break;
+                        }
+                        gameController1.updateEnemyMove(tile, x, y, orientation, 1, xb, yb, t);//build params)
+                    }
+                    gameController1.updateEnemyMove(tile, x, y, orientation, bo, xb, yb);
+
+                } else {
+                    if (gid.equals(gameController2.getGameID())) {
+                        if (message[13].equals("EXPANDED")) {
+                            Terrain t = null;
+                            switch (message[19].charAt(0)) {
+                                case 'J':
+                                    t = Terrain.JUNGLE;
+                                    break;
+                                case 'L':
+                                    t = Terrain.LAKE;
+                                    break;
+                                case 'G':
+                                    t = Terrain.GRASSLANDS;
+                                    break;
+                                case 'R':
+                                    t = Terrain.ROCKY;
+                                    break;
+                            }
+                            gameController2.updateEnemyMove(tile, x, y, orientation, 1, xb, yb, t);//build params)
+                        }
+                        gameController2.updateEnemyMove(tile, x, y, orientation, bo, xb, yb);
+                    }
                 }
-            }
-        }
-        else if(message[2].equals("OVER")){
-            String gid = message[1];
-            if(gid.equals(gameController1.getGID())){
-                gameController1.endGame();
-            }
-            else{
-                gameController2.endGame();
-            }
-        }
-        else{
-            String gid = message[1];
-            if(gid.equals(gameController1.getGID())){
-                gameController1.endGame();
-            }
-            else{
-                gameController2.endGame();
+            } else if (message[2].equals("OVER")) {
+                String gid = message[1];
+                if (gid.equals(gameController1.getGameID())) {
+                    gameController1.endGame();
+                } else {
+                    gameController2.endGame();
+                }
+            } else {
+                String gid = message[1];
+                if (gid.equals(gameController1.getGameID())) {
+                    gameController1.endGame();
+                } else {
+                    gameController2.endGame();
+                }
             }
         }
     }
@@ -192,7 +244,7 @@ public class Ambassador {
     }
 
     private int toInt(String s){
-        return 1;//;figure how to caste string to int.
+        return Integer.parseInt(s);
     }
 
     private int getCoordX(int x, int y, int z){
@@ -208,15 +260,15 @@ public class Ambassador {
         Tile tile = getTileFromString(message[message.length - 1]);
         String gid = message[5];
         int time = toInt(message[7]) * 1000;
-        if(gameController1.getGID() == null){
-            gameController1.setGID(gid);
+        if(gameController1.getGameID() == null){
+            gameController1.setGameID(gid);
             reply = getMoveAsString(gameController1.playMove(tile, time));
         }
-        else if (gameController2.getGID() == null) {
-            gameController2.setGID(gid);
+        else if (gameController2.getGameID() == null) {
+            gameController2.setGameID(gid);
             reply = getMoveAsString(gameController2.playMove(tile, time));
         }
-        else if(gid.equals(gameController1.getGID())){
+        else if(gid.equals(gameController1.getGameID())){
             reply = getMoveAsString(gameController1.playMove(tile, time));
         }
         else{
@@ -226,6 +278,21 @@ public class Ambassador {
     }
 
     private String getMoveAsString(String move){
-        //get the move the AI wants to make, then format it correctly
+        return move += CRLF;
     }
+
+    public void setAI1(AI gameController1) {
+        this.gameController1 = gameController1;
+    }
+    public AI getAI1() {
+        return gameController1;
+    }
+
+    public void setAI2(AI gameController2) {
+        this.gameController2 = gameController2;
+    }
+    public AI getAI2() {
+        return gameController2;
+    }
+    */
 }

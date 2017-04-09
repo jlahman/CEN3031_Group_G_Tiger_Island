@@ -48,4 +48,20 @@ public class Settlement {
         return hexesInSettlement.get(0).getOwner();
     }
 
+    public boolean hasTotoro(){
+        for(Hex h: hexesInSettlement){
+            if(h.hasTotoro())
+                return true;
+        }
+        return false;
+    }
+
+    public boolean hasTiger(){
+        for(Hex h: hexesInSettlement){
+            if(h.hasTiger())
+                return true;
+        }
+        return false;
+    }
+
 }
