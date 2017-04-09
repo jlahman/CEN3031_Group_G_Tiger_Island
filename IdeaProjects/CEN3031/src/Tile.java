@@ -105,5 +105,13 @@ public class Tile{
             this.orientation = orientation;
     }
 
+    public TileType getTileType() {
+        return type;
+    }
+
+    public String getTileTypeString() {
+        return type.getTileTypeText();
+    }
+
 
 }
