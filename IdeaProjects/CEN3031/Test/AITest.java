@@ -15,11 +15,6 @@ public class AITest {
         a = new AI();
     }
 
-/*    @After
-    public void tearDown() throws Exception {
-
-    }*/
-
     @Test
     public void setGameID() throws Exception {
         a = new AI();
@@ -31,5 +26,11 @@ public class AITest {
     public void playMove() throws Exception {
         
     }
+
+
+    /*    @After
+    public void tearDown() throws Exception {
+
+    }*/
 
 }
