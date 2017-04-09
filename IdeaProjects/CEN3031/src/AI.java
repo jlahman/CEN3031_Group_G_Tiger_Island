@@ -23,7 +23,7 @@ public class AI {
 
     public void setGameID(String gameID) { this.gameID = gameID; }
 
-    public int getGameID() { return gameID; }
+    public String getGameID() { return gameID; }
 
     private void startNewGame() {
         game = new Game();
@@ -31,15 +31,15 @@ public class AI {
         updateLists();
     }
 
-    private void updateLists(Tile tile, int settlementID, int terrain, int remainingMeeple, int totoroRemaining, int remainingTiger){
-        updateValidTilePlacement(tile);
-        updateBuildSettlement(remainingMeeple);
-        updateExpandSettlement(settlementID, terrain, remainingMeeple);
-        updateBuildTotoro(settlementID, totoroRemaining);
-        updateBuildTiger(settlementID, remainingTiger);
+    private void updateLists(){
+        updateValidTilePlacement();
+        updateBuildSettlement();
+        updateExpandSettlement();
+        updateBuildTotoro();
+        updateBuildTiger();
     }
 
-    private void updateValidTilePlacement(Tile tile) {
+    private void updateValidTilePlacement() {
         for (Hex hex : game.board.playedHexes) {
             int[] currentArr = new int[4];
             Tile temp = new Tile(TileType.JJ);
@@ -50,7 +50,7 @@ public class AI {
                 currentArr[2] = i;
                 for (int j = 0; j < 3; j++) {
                     currentArr[3] = j;
-                    if (game.board.isPlacementValid(tile, hex, j)) {
+                    if (game.board.isPlacementValid(temp, hex, j)) {
                         if(!validTilePlacement.contains(currentArr)) {
                             validTilePlacement.add(currentArr);
                         }
@@ -63,12 +63,12 @@ public class AI {
         }
     }
 
-    private void updateBuildSettlement(int remainingMeeple) {
+    private void updateBuildSettlement() {
         for (Hex hex : game.board.playedHexes) {
             int[] currentArr = new int[2];
             currentArr[0] = hex.indexX;
             currentArr[1] = hex.indexY;
-            if (game.board.isBuildSettlementValid(hex, remainingMeeple)) {
+            if (game.build.isBuildSettlementValid(hex, player1.getMeepleCount())) {
                 if(!buildSettlement.contains(currentArr)) {
                    buildSettlement.add(currentArr);
                 }
@@ -79,30 +79,33 @@ public class AI {
         }
     }
 
-    private void updateExpandSettlement(int settlementID, int terrain, int remainingMeeple){
-        for (Hex hex : game.board.playedHexes) {
+    private void updateExpandSettlement(){
+        for (Settlement s : game.board.SettlementList) {
             int[] currentArr = new int[3];
+            Hex hex = s.hexesInSettlement.get(0);
             currentArr[0] = hex.indexX;
             currentArr[1] = hex.indexY;
-            currentArr[2] = terrain;
-            if (game.board.isExpandSettlementValid(game.board, settlementID, terrain, remainingMeeple)) {
-                if(!expandSettlement.contains(currentArr)) {
-                    expandSettlement.add(currentArr);
-                }
-                else if(expandSettlement.contains(currentArr)) {
-                    expandSettlement.remove(currentArr);
+            for(int i = 0; i < 4; i++) {
+                currentArr[2] = i;
+                if (game.build.isExpandSettlementValid(game.board, hex.getSettlementID(), hex.getTerrain(), game.player1.getMeepleCount())) {
+                    if(!expandSettlement.contains(currentArr)) {
+                        expandSettlement.add(currentArr);
+                    }
+                    else if(expandSettlement.contains(currentArr)) {
+                        expandSettlement.remove(currentArr);
+                    }
                 }
             }
         }
 
     }
 
-    private void updateBuildTotoro(int settlementID, int totoroRemaining) {
+    private void updateBuildTotoro() {
         for (Hex hex : game.board.playedHexes) {
             int[] currentArr = new int[2];
             currentArr[0] = hex.indexX;
             currentArr[1] = hex.indexY;
-            if(game.board.isBuildTotoroSanctuaryValid(game.board, hex, settlementID, totoroRemaining)) {
+            if(game.build.isBuildTotoroSanctuaryValid(game.board, hex, game.player1.getTotoroCount)) {
                 if(!buildTotoro.contains(currentArr)) {
                     buildTotoro.add(currentArr);
                 }
@@ -113,12 +116,12 @@ public class AI {
         }
     }
 
-    private void updateBuildTiger(int settlementID, int remainingTiger) {
+    private void updateBuildTiger() {
         for (Hex hex : game.board.playedHexes) {
             int[] currentArr = new int[2];
             currentArr[0] = hex.indexX;
             currentArr[1] = hex.indexY;
-            if(game.board.isBuildTigerSanctuaryValid(game.board, hex, settlementID, remainingTiger)) {
+            if(game.build.isBuildTigerSanctuaryValid(game.board, hex, game.player1.getTigerCount)) {
                 if(!buildTiger.contains(currentArr)) {
                     buildTiger.add(currentArr);
                 }
@@ -137,26 +140,26 @@ public class AI {
         validTilePlacement = new Vector<int[]>();
     }
 
-    public void playMove() {
-
+    public String playMove(Tile tile, int time) {
+        // x = x - game.board.rootHex.indexX
     }
 
     public void updateEnemyMove(Tile t, int x, int y, int connectingHex, int buildOptionNumber, int xb, int yb) {
-        game.getBoard().placeTile(t, game.getBoard().hexArr[x][y], connectingHex);
+        x = x + game.board.rootHex.indexX;
+        y = y + game.board.rootHex.indexY;
+        xb = xb + game.board.rootHex.indexX;
+        yb = yb + game.board.rootHex.indexY;
+        game.board.placeTile(t, game.getBoard().hexArr[x][y], connectingHex);
         game.setBuildOption(buildOptionNumber, xb, yb);
     }
 
     public void updateEnemyMove(Tile t, int x, int y, int connectingHex, int buildOptionNumber, int xb, int yb, Terrain terrainType) {
-        game.getBoard().placeTile(t, game.getBoard().hexArr[x][y], connectingHex);
+        game.board.placeTile(t, game.getBoard().hexArr[x][y], connectingHex);
         game.setBuildOption(buildOptionNumber, xb, yb, terrainType);
     }
 
     public void endGame() {
         gameEnd = true;
-    }
-
-    private void playableMove() {
-
     }
 
 }
