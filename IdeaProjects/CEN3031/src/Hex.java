@@ -8,14 +8,12 @@ public class Hex {
     private int level;
     //public int getAdjHex[];
     public int indexX, indexY;
-    private boolean isEmpty;
+    //private boolean isEmpty;
     private Tile tile;
     private int meeple;
     private int totoro;
     private int tiger;
     private int settlementID;
-
-
 
     private Player owner;
 
@@ -110,7 +108,6 @@ public class Hex {
         this.tiger = 1;
     }
 
-
     public int getTotoro() {
         return totoro;
     }
@@ -130,7 +127,9 @@ public class Hex {
     }
 
     public boolean hasTiger(){
-        return tiger > 0;
+        if(tiger > 0 && tiger < 2)
+            return true;
+        return false;
     }
 
     public int getSettlementID() {
@@ -155,4 +154,5 @@ public class Hex {
 /*
 file new maven create from archt, quckstart
 whateer gid
-perferences*/
+perferences
+*/

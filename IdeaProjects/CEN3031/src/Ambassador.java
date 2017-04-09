@@ -8,7 +8,7 @@ import java.net.Socket;
  * Created by madashi on 4/6/17.
  */
 public class Ambassador {
-    ///*
+
     private static String CRLF = "\r\n";
     private AI gameController1;
     private AI gameController2;
@@ -55,30 +55,6 @@ public class Ambassador {
             in = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
         } catch (Exception e){
             System.err.println("Error occured: " + e.getMessage());
-        }
-    }
-
-    //copied from another project for reference, not needed
-    public void runLoop(){
-        String fromServer, fromUser;
-        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-
-        try {
-            while (true) {
-                fromServer = in.readLine();
-                System.out.println("Server(from c): " + fromServer);
-                if (fromServer == "quit")
-                    break;
-
-                fromUser = stdIn.readLine();
-
-                if (fromUser != null) {
-                    System.out.println("Client: " + fromUser);
-                    out.println(fromUser);
-                }
-            }
-        } catch(Exception e){
-
         }
     }
 
@@ -252,5 +228,4 @@ public class Ambassador {
     private String getMoveAsString(String move){
         //get the move the AI wants to make, then format it correctly
     }
-    //*/
 }

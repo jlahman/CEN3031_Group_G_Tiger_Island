@@ -76,21 +76,8 @@ public class Board {
         }
     }
 
-    private void checkForAdjSettlements(){
-        //for each settlement in list,
-            //check if adj to any other settlement owned by same player
-                //if adj combine the two, updating hex list and settlement id
-        /*for(Settlement settlement: settlementList){
-            List<Settlement> temp;
-            temp = getAdjSettlement(settlement);
-            if(temp.size() > 0){
-                combineSettlements(settlement, temp);
-            }
-        }*/
-    }
-
-    private List<Hex> BFSForSettlement(Hex hex){
-        List<Hex> temp = Collections.emptyList();
+    public List<Hex> BFSForSettlement(Hex hex){
+        List<Hex> temp = new Vector<Hex>();
         boolean quit = false;
         Hex current = hex;
         int ID = hex.getSettlementID();
@@ -116,7 +103,7 @@ public class Board {
         return temp;
     }
 
-    private void placeHex(Hex newHex, Hex oldHex){
+    protected void placeHex(Hex newHex, Hex oldHex){
 
         newHex.indexX = oldHex.indexX;
         newHex.indexY = oldHex.indexY;
@@ -190,9 +177,9 @@ public class Board {
                 break;
             case 3: tempX = hex.indexX;
                 break;
-            case 4: tempX = (hex.indexX - 1)%tileNumber;
+            case 4: tempX = (hex.indexX + tileNumber- 1)%tileNumber;
                 break;
-            case 5: tempX = (hex.indexX - 1)%tileNumber;
+            case 5: tempX = (hex.indexX + tileNumber- 1)%tileNumber;
                 break;
         }
         return tempX;
@@ -201,9 +188,9 @@ public class Board {
     private int getAdjHexIndexY(Hex hex, int index){
         int tempY = -1;
         switch(index){
-            case 0: tempY = (hex.indexY - 1)%tileNumber;
+            case 0: tempY = (hex.indexY + tileNumber- 1)%tileNumber;
                 break;
-            case 1: tempY = (hex.indexY - 1)%tileNumber;
+            case 1: tempY = (hex.indexY + tileNumber- 1)%tileNumber;
                 break;
             case 2: tempY = hex.indexY;
                 break;
@@ -218,7 +205,7 @@ public class Board {
     }
 
     public Hex getAdjHex(Hex hex, int index){
-        if(hexArr[hex.indexX][hex.indexY] == hex)
+        if(hex.indexX > -1 && hex.indexY > -1)
             return hexArr[getAdjHexIndexX(hex, index)][getAdjHexIndexY(hex, index)];
         else
             return null;
@@ -386,11 +373,7 @@ public class Board {
         return true;
     }
 
-    public void debug(int i){
-
-    }
-
-    public void draw(){
+    /*public void draw(){
         String temp = "Game Board: \n";
         for(int i = 0; i < 2*tileNumber; i ++){
             for(int j = 0; j < 2*tileNumber; j++){
@@ -405,6 +388,6 @@ public class Board {
         }
 
         System.out.print(temp);
-    }
+    }*/
 
 }
