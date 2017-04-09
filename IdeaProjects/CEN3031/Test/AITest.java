@@ -10,14 +10,14 @@ import static org.junit.Assert.*;
 public class AITest {
 
     AI a;
+
     @Before
     public void setUp() throws Exception {
         a = new AI();
     }
 
     @Test
-    public void setGameID() throws Exception {
-        a = new AI();
+    public void setGameIDTest() throws Exception {
         a.setGameID("gameName");
         assertEquals("gameName",a.getGameID());
     }
