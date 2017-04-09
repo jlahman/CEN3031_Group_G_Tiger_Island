@@ -173,28 +173,52 @@ public class BuildOptions {
     }
 
     // Place Totoro
-    public void buildTotoroSanctuary(Board board, Hex hex, int settlementID, Player p){
-        if(isBuildTotoroSanctuaryValid(board, hex, settlementID, p.getTotoroCount())){
+    public void buildTotoroSanctuary(Board board, Hex hex, Player p){
+        if(isBuildTotoroSanctuaryValid(board, hex, p)){
             hex.addTotoro();
-            board.settlementList.get(settlementID).addHex(hex);
+            int id = findAdjSettlementForTotoro(board, hex, p);
+            board.settlementList.get(id).addHex(hex);
             placedHexes.add(hex);
             p.increaseScore(200);
 
             checkForAdjSettlements(board);
-            joinSettlements(board, settlementID);
+            joinSettlements(board, id);
             cleanLists();
         }
     }
 
-    public boolean isBuildTotoroSanctuaryValid(Board board, Hex hex, int settlementID, int totoroRemaining){
+    private int findAdjSettlementForTotoro(Board board, Hex hex, Player P) {
+        for(int i = 0; i <6; i++){
+            if(board.getAdjHex(hex, i) != null){
+                if(board.getAdjHex(hex, i).getSettlementID() != -1 && board.getAdjHex(hex, i).getOwner() == P && board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).settlementSize() >= 5 && !board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).hasTotoro())
+                    return board.getAdjHex(hex, i).getSettlementID();
+            }
+        }
+        return -1;
+    }
+
+    private int findAdjSettlementForTiger(Board board, Hex hex, Player P) {
+        for(int i = 0; i <6; i++){
+            if(board.getAdjHex(hex, i) != null){
+                if(board.getAdjHex(hex, i).getSettlementID() != -1 && board.getAdjHex(hex, i).getOwner() == P  && !board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).hasTiger())
+                    return board.getAdjHex(hex, i).getSettlementID();
+            }
+        }
+        return -1;
+    }
+
+    public boolean isBuildTotoroSanctuaryValid(Board board, Hex hex, Player p){
         //do next
         boolean settlementIsLargeEnough = false;
         boolean settlementHasTotoro = true;
         boolean hexIsEmpty = false;
         boolean isValidTerrain; //non volcano terrain type
-        boolean hasEnoughTotoro = (totoroRemaining > 0);
+        boolean hasEnoughTotoro = (p.getTotoroCount() > 0);
         Terrain terrain = hex.getTerrain();
         isValidTerrain = (terrain != Terrain.VOLCANO);
+
+        int id = findAdjSettlementForTotoro(board, hex, p);
+
 
         //Hex is empty
         if(hex.isEmpty()){
@@ -202,58 +226,47 @@ public class BuildOptions {
         }
 
         //adj to size 5+ settlement
-        Settlement temp = board.settlementList.get(settlementID);
-        if(temp.settlementSize() >= 5){
+
+        if(id ==-1) {
+            settlementIsLargeEnough = false;
+            settlementHasTotoro = false;
+        }
+        else {
             settlementIsLargeEnough = true;
+            settlementHasTotoro = board.settlementList.get(id).hasTotoro();
         }
 
-        Hex tHex;
-        //settlement doesn't already contain totoro sanctuary
-        for(int i = 0; i < temp.settlementSize(); i++) {
-            tHex = temp.hexesInSettlement.get(i);
-            if (tHex.hasTotoro()){
-                settlementHasTotoro = true;
-                break;
-            }
-            else
-                settlementHasTotoro = false;
-        }
-        boolean hexIsAdjToSettlement = false;
-        //hex is adjacent to settlement
-        for(int i = 0; i < 6; i++){
-            tHex = board.getAdjHex(hex, i);
-            if(temp.hexesInSettlement.contains(tHex)){
-                hexIsAdjToSettlement = true;
-                i = 6;
-            }
-        }
-        return (isValidTerrain && settlementIsLargeEnough && !settlementHasTotoro && hexIsEmpty && hasEnoughTotoro && hexIsAdjToSettlement);
+        return (isValidTerrain && settlementIsLargeEnough && !settlementHasTotoro && hexIsEmpty && hasEnoughTotoro);
     }
 
     // Build tiger sanctuary
-    public void buildTigerSanctuary(Board board, Hex hex, int settlementID, Player p){
-        if(isBuildTigerSanctuaryValid(board, hex, settlementID, p.getTigerCount())){
+    public void buildTigerSanctuary(Board board, Hex hex, Player p){
+        if(isBuildTigerSanctuaryValid(board, hex, p)){
             hex.addTiger();
-            board.settlementList.get(settlementID).addHex(hex);
+            int id = findAdjSettlementForTiger(board, hex, p);
+            board.settlementList.get(id).addHex(hex);
             placedHexes.add(hex);
             p.increaseScore(75);
 
             checkForAdjSettlements(board);
-            joinSettlements(board, settlementID);
+            joinSettlements(board, id);
             cleanLists();
         }
     }
 
-    public boolean isBuildTigerSanctuaryValid(Board board, Hex hex, int settlementID, int remainingTiger){
+    public boolean isBuildTigerSanctuaryValid(Board board, Hex hex, Player p){
         boolean hexIsHighEnough = false;
         boolean hexIsAdjToSettlement = false;
         boolean settlementHasTiger = true;
         boolean hexIsEmpty = false;
         boolean isValidTerrain; //non volcano terrain type
-        boolean hasEnoughTiger = (remainingTiger > 0);
+        boolean hasEnoughTiger = (p.getTigerCount() > 0);
         //boolean settlementOwnerSameAsPlacer = ();
         Terrain terrain = hex.getTerrain();
         isValidTerrain = (terrain != Terrain.VOLCANO);
+
+        int id = findAdjSettlementForTiger(board, hex, p);
+
 
         //Hex is empty
 
@@ -267,27 +280,13 @@ public class BuildOptions {
             hexIsHighEnough = true;
         }
 
-        Settlement  temp = board.settlementList.get(settlementID);
+        if(id ==-1) {
+            settlementHasTiger = false;
+        }
+        else {
+            settlementHasTiger = board.settlementList.get(id).hasTotoro();
+        }
 
-        Hex tHex;
-        //settlement doesn't already contain tiger sanctuary
-        for(int i = 0; i < temp.settlementSize(); i++) {
-            tHex = temp.hexesInSettlement.get(i);
-            if (tHex.hasTiger()){
-                settlementHasTiger = true;
-                break;
-            }
-            else
-                settlementHasTiger = false;
-        }
-        //hex is adjacent to settlement
-        for(int i = 0; i < 6; i++){
-            tHex = board.getAdjHex(hex, i);
-            if(temp.hexesInSettlement.contains(tHex)){
-                hexIsAdjToSettlement = true;
-                i = 6;
-            }
-        }
-        return (isValidTerrain && hexIsAdjToSettlement && hexIsHighEnough && hexIsEmpty && !settlementHasTiger && hasEnoughTiger);
+        return (isValidTerrain && hexIsHighEnough && hexIsEmpty && !settlementHasTiger && hasEnoughTiger);
     }
 }
