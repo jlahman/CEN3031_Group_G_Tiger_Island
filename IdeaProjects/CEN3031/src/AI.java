@@ -141,20 +141,42 @@ public class AI {
     }
 
     public String playMove(Tile tile, int time) {
-        game.b.placeTile();
-        chooseTileToPlace();
+        game.board.placeTile(tile, hex, connectinghex);
+        int[] tileChose = chooseTileToPlace();
         updateLists();
-        chooseBuildOption(); // int array
-        int x = x + game.board.rootHex.indexX;
-        int y = y + game.board.rootHex.indexY;
+        int[] buildChose = chooseBuildOption();
         game.playBuildOption(x, y);
         updateLists();
 
-        //% size of array - 1
-
+        int x = tileChose[0];
+        int y = tileChose[1];
+        x = x + game.board.rootHex.indexX;
+        y = y + game.board.rootHex.indexY;
+        int orientation = tileChose[2];
+        //Integer.toString(number)
         // x = x - game.board.rootHex.indexX
+        String xStr = Integer.toString(x);
+        String yStr = Integer.toString(y);
+        String orStr = Integer.toString(orientation);
+        String buildOpStr = Integer.toString(buildOptionNumber);
+        String xbStr = Integer.toString(xb);
+        String ybStr = Integer.toString(yb);
 
-        return tile.getTileTypeString() + " " + ;
+        return tile.getTileTypeString() + " " + xStr + " " + yStr + " " + orStr + " " + buildOpStr + " "  + xbStr + " " + ybStr + " " + Terrain.getTerrainText();
+    }
+
+    public int[] chooseTileToPlace() {
+        int[] tileArr;
+        tileArr = validTilePlacement.get(validTilePlacement.size()-1);
+        validTilePlacement.remove(tileArr);
+        return tileArr;
+    }
+
+    public int[] chooseBuildOption() {
+        //list
+        //int random = (int)Math.random()*list.get(0).length - 1
+        //int[] choose = list.get(random);
+        return choose;
     }
 
     public void updateEnemyMove(Tile t, int x, int y, int connectingHex, int buildOptionNumber, int xb, int yb) {
