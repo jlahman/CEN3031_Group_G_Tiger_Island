@@ -24,7 +24,7 @@ public class AITest {
     public void setGameID() throws Exception {
         a = new AI();
         a.setGameID("gameName");
-        assertEquals(a.getGameID(),"gameName");
+        assertEquals("gameName",a.getGameID());
     }
 
     @Test
