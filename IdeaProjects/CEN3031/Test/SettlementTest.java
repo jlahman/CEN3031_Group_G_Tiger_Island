@@ -83,6 +83,9 @@ public class SettlementTest {
         Player dummyPlayer = new Player("");
         dummyHex.setOwner(dummyPlayer);
 
+        Assert.assertNull(settlement0.getOwner());
+        Assert.assertEquals(settlement0.getOwner(), null);
+
         settlement0.addHex(dummyHex);
         Assert.assertEquals(settlement0.getOwner(), dummyPlayer);
     }
