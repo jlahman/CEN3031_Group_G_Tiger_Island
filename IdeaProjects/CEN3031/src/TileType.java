@@ -15,9 +15,4 @@ public enum TileType{
     public String getTileTypeText(){
         return this.tileTypeText;
     }
-
-    public void setTileTypeText(String tileTypeText){
-        this.tileTypeText = tileTypeText;
-    }
-
 }

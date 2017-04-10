@@ -18,9 +18,5 @@ public enum Terrain {
         public String getTerrainText(){
             return terrainText;
         }
-        // Setter
-        public void setTerrainText(String Terrain){
-            terrainText = Terrain;
-        }
 }
 
