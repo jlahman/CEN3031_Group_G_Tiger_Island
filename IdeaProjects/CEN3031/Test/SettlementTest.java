@@ -113,4 +113,13 @@ public class SettlementTest {
         Assert.assertEquals(settlement0.hasTotoro(), true);
     }
 
+    @Test
+    public void hasWrongTotoroTest() throws Exception {
+        Hex dummyHexToNotAddTotoro = new Hex();
+        dummyHexToNotAddTotoro.setTotoro(0);
+
+        settlement0.addHex(dummyHexToNotAddTotoro);
+        Assert.assertNotEquals(settlement0.hasTotoro(), true);
+    }
+
 }
