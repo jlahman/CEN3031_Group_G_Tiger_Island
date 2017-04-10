@@ -18,10 +18,12 @@ public class PlayerTest {
         p = new Player(name);
     }
 
-/*    @After
+    /*
+    @After
     public void tearDown() throws Exception {
 
-    }*/
+    }
+    */
 
     @Test
     public void setSetMeepleCountTest() throws Exception {
