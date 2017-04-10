@@ -122,4 +122,22 @@ public class SettlementTest {
         Assert.assertNotEquals(settlement0.hasTotoro(), true);
     }
 
+    @Test
+    public void hasTigerTest() throws Exception {
+        Hex dummyHexToAddTiger = new Hex();
+        dummyHexToAddTiger.setTiger(1);
+
+        settlement0.addHex(dummyHexToAddTiger);
+        Assert.assertEquals(settlement0.hasTiger(), true);
+    }
+
+    @Test
+    public void hasWrongTigerTest() throws Exception {
+        Hex dummyHexToNotAddTiger = new Hex();
+        dummyHexToNotAddTiger.setTiger(0);
+
+        settlement0.addHex(dummyHexToNotAddTiger);
+        Assert.assertNotEquals(settlement0.hasTiger(), true);
+    }
+
 }
