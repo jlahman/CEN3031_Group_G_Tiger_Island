@@ -40,15 +40,19 @@ public class BuildOptions {
     }
 
     private void joinSettlements(Board board, int id){
+        Settlement toJoinTo = board.settlementList.get(id);
         for (Settlement s: settlementsToJoin){
+            for(Settlement higher: board.settlementList){
+                if(higher.getSettlementID() > s.getSettlementID()){
+                    higher.setSettlementID(higher.getSettlementID() -1);// = new Settlement(higher.hexesInSettlement, higher.getSettlementID() -1);
+                }
+            }
             board.settlementList.remove(s);
         }
 
         for (Settlement s: settlementsToJoin){
-            combineSettlements(board, id, s);
+            combineSettlements(board, toJoinTo.getSettlementID(), s);
         }
-
-
     }
 
     private void combineSettlements(Board board, int id, Settlement s){

@@ -24,6 +24,13 @@ public class Settlement {
         }
     }
 
+    public void setSettlementID(int sID){
+        settlementID = sID;
+        for (Hex hex : hexesInSettlement){
+            hex.setSettlementID(settlementID);
+        }
+    }
+
     public int getSettlementID() {
         return settlementID;
     }

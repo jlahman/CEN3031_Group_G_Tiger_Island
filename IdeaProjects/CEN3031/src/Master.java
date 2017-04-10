@@ -43,7 +43,7 @@ public class Master {
         int i  = Integer.parseInt(Cargs[1]);
         //if (i != 4444)
             //System.out.println(i);
-        amb.init(Cargs[0], i, Cargs[2], Cargs[3]);
+        amb.init(Cargs[0], i, Cargs[2], Cargs[3], Cargs[4]);
         AI game1AI = new AI();
         AI game2AI = new AI();
         amb.setAI1(game1AI);
