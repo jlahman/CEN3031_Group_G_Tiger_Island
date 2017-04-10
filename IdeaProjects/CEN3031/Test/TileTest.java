@@ -71,4 +71,16 @@ public class TileTest {
         t = new Tile(TileType.RL);
         assertEquals(t.getTerrainTwo(TileType.RL), Terrain.LAKE);
     }
+
+    @Test
+    public void getTerrain1TestGamma() throws Exception {
+        t = new Tile(TileType.RR);
+        assertEquals(t.getTerrainOne(TileType.RR), Terrain.ROCKY);
+    }
+
+    @Test
+    public void getTerrain2TestGamma() throws Exception {
+        t = new Tile(TileType.RR);
+        assertEquals(t.getTerrainTwo(TileType.RR), Terrain.ROCKY);
+    }
 }
