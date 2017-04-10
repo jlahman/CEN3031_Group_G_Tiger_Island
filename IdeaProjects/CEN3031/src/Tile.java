@@ -27,18 +27,8 @@ public class Tile{
         this.orientation = 0;
     }
 
-
     public Hex getTileHex(int index){
         return hexes[index];
-    }
-
-    /*Test method to see if hexes are correct*/
-    public String showTile(){
-        String str = "";
-        for(Hex h: hexes){
-            str += h.getTerrainAsString();
-        }
-        return str;
     }
 
     public int getTilelevel () {
@@ -103,10 +93,6 @@ public class Tile{
     public void setOrientation(int orientation) {
         if(orientation <6 && orientation >=0)
             this.orientation = orientation;
-    }
-
-    public TileType getTileType() {
-        return type;
     }
 
     public String getTileTypeString() {
