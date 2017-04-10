@@ -154,7 +154,7 @@ public class BuildOptionsTest {
     @Test
     public void buildTigerSanctuaryNotOnLevel3Test() throws Exception {
         b.getAdjHex(b.rootHex, 0).setOwner(p1);
-        BO.buildTigerSanctuary(b, b.getAdjHex(b.rootHex, 1), 0, p1);
+        BO.buildTigerSanctuary(b, b.getAdjHex(b.rootHex, 1), p1);
         assertFalse(b.getAdjHex(b.rootHex, 1).hasTiger());
     }
 
@@ -162,7 +162,7 @@ public class BuildOptionsTest {
     public void buildTigerSanctuaryOnLevel3Test() throws Exception {
         b.getAdjHex(b.rootHex, 0).setOwner(p1);
         b.getAdjHex(b.rootHex, 1).setLevel(3);
-        BO.buildTigerSanctuary(b, b.getAdjHex(b.rootHex, 1), 0, p1);
+        BO.buildTigerSanctuary(b, b.getAdjHex(b.rootHex, 1), p1);
         assertTrue(b.getAdjHex(b.rootHex, 1).hasTiger());
     }
 
