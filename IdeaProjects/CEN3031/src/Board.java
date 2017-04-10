@@ -115,12 +115,13 @@ public class Board {
 
         newHex.setLevel(oldHex.getLevel() + 1);
 
-        playedHexes.remove(oldHex);
-        playedHexes.add(newHex);
+
 
         if(oldHex == rootHex)
             rootHex = newHex;
 
+        playedHexes.remove(oldHex);
+        playedHexes.add(newHex);
         updateSettlementList(oldHex);
     }
 

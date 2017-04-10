@@ -12,7 +12,7 @@ public class AI {
     private boolean gameEnd = false;
 
     private List<int[]> validTilePlacement = new Vector<int[]>();
-    private List<int[]> buildSettlement = new Vector<int[]>();
+    public List<int[]> buildSettlement = new Vector<int[]>();
     private List<int[]> expandSettlement = new Vector<int[]>();
     private List<int[]> buildTotoro= new Vector<int[]>();
     private List<int[]> buildTiger = new Vector<int[]>();
@@ -55,7 +55,9 @@ public class AI {
                         if(!validTilePlacement.contains(currentArr)) {
                             validTilePlacement.add(currentArr);
                         }
-                        else if (validTilePlacement.contains(currentArr)) {
+
+                    }else if(!game.board.isPlacementValid(temp, hex, j)){
+                        if (validTilePlacement.contains(currentArr)) {
                             validTilePlacement.remove(currentArr);
                         }
                     }
@@ -64,7 +66,7 @@ public class AI {
         }
     }
 
-    private void updateBuildSettlement() {
+    protected void updateBuildSettlement() {
         for (Hex hex : game.board.playedHexes) {
             int[] currentArr = new int[2];
             currentArr[0] = hex.indexX;
@@ -73,7 +75,9 @@ public class AI {
                 if(!buildSettlement.contains(currentArr)) {
                     buildSettlement.add(currentArr);
                 }
-                else if(buildSettlement.contains(currentArr)) {
+
+            }else if(!(game.build.isBuildSettlementValid(hex, game.player1.getMeepleCount()))){
+                if(buildSettlement.contains(currentArr)) {
                     buildSettlement.remove(currentArr);
                 }
             }
@@ -92,7 +96,10 @@ public class AI {
                     if(!expandSettlement.contains(currentArr)) {
                         expandSettlement.add(currentArr);
                     }
-                    else if(expandSettlement.contains(currentArr)) {
+
+                }else if (!game.build.isExpandSettlementValid(game.board, hex.getSettlementID(), hex.getTerrain(), game.player1.getMeepleCount()))
+                {
+                    if (expandSettlement.contains(currentArr)) {
                         expandSettlement.remove(currentArr);
                     }
                 }
@@ -110,10 +117,13 @@ public class AI {
                 if(!buildTotoro.contains(currentArr)) {
                     buildTotoro.add(currentArr);
                 }
-                else if(buildTotoro.contains(currentArr)) {
+
+            }else if(!game.build.isBuildTotoroSanctuaryValid(game.board, hex, game.player1)){
+                if(buildTotoro.contains(currentArr)) {
                     buildTotoro.remove(currentArr);
                 }
             }
+
         }
     }
 
@@ -126,7 +136,9 @@ public class AI {
                 if(!buildTiger.contains(currentArr)) {
                     buildTiger.add(currentArr);
                 }
-                else if(buildTiger.contains(currentArr)) {
+
+            }else if(!game.build.isBuildTigerSanctuaryValid(game.board, hex, game.player1)) {
+                if (buildTiger.contains(currentArr)) {
                     buildTiger.remove(currentArr);
                 }
             }
@@ -144,19 +156,37 @@ public class AI {
     public String playMove(Tile tile, int time) {
         Random rand = new Random();
         int n = rand.nextInt(validTilePlacement.size());
+        //check if need to mod
         int x = validTilePlacement.get(n)[0];
         x = x - game.board.rootHex.indexX;
         int y = validTilePlacement.get(n)[1];
         y = y - game.board.rootHex.indexY;
-        int ornt = validTilePlacement.get(n)[2];
-        game.board.placeTile(tile, game.board.hexArr[validTilePlacement.get(n)[0]][validTilePlacement.get(n)[1]], ornt);
+
+        int ornt = validTilePlacement.get(n)[2] + 1;
+        tile.setOrientation(ornt -1);
+        game.board.placeTile(tile, game.board.hexArr[validTilePlacement.get(n)[0]][validTilePlacement.get(n)[1]], validTilePlacement.get(n)[3]);
        // chooseTileToPlace();
         updateLists();
         int xb = -1, yb = -1 , bNum = -1;
         Terrain t = null;
-        n = rand.nextInt(4);
+        int flip = rand.nextInt(2);
+        n = -1;
+        if(buildTotoro.size() != 0){
+            n = 2;
+        }else if(buildTiger.size() != 0){
+            n = 3;
+        } else if(expandSettlement.size() != 0 && flip == 0){
+            n = 1;
+        } else if(buildSettlement.size() != 0){
+            n = 0;
+        }
+         //rand.nextInt(4);
         switch (n){
-            case 0: n = rand.nextInt(buildSettlement.size());
+            case 0:if(buildSettlement.size() > 0)
+                         n = rand.nextInt(buildSettlement.size());
+                    else{
+                    System.out.println(buildSettlement.size());
+                        break;}
                 xb = buildSettlement.get(n)[0];
                 xb = xb - game.board.rootHex.indexX;
                 yb = buildSettlement.get(n)[1];
@@ -164,7 +194,10 @@ public class AI {
                 bNum = 0;
                 game.playMove(0, buildSettlement.get(n)[0], buildSettlement.get(n)[1]);
                 break;
-            case 1: n = rand.nextInt(expandSettlement.size());
+            case 1: if(expandSettlement.size() > 0)
+                        n = rand.nextInt(expandSettlement.size());
+                    else
+                        break;
                 xb = expandSettlement.get(n)[0];
                 xb = xb - game.board.rootHex.indexX;
                 yb = expandSettlement.get(n)[1];
@@ -173,7 +206,10 @@ public class AI {
                 t = Terrain.values()[expandSettlement.get(n)[2]];
                 game.playMove(1, expandSettlement.get(n)[0], expandSettlement.get(n)[1], t);
                 break;
-            case 2: n = rand.nextInt(buildTotoro.size());
+            case 2: if(buildTotoro.size() > 0)
+                n = rand.nextInt(buildTotoro.size());
+            else
+                break;
                 xb = buildTotoro.get(n)[0];
                 xb = xb - game.board.rootHex.indexX;
                 yb = buildTotoro.get(n)[1];
@@ -181,7 +217,10 @@ public class AI {
                 bNum = 2;
                 game.playMove(2, buildTotoro.get(n)[0], buildTotoro.get(n)[1]);
                 break;
-            case 3: n = rand.nextInt(buildTiger.size());
+            case 3:if(buildTiger.size() > 0)
+                n = rand.nextInt(buildTiger.size());
+            else
+                break;
                 xb = buildTiger.get(n)[0];
                 xb = xb - game.board.rootHex.indexX;
                 yb = buildTiger.get(n)[1];
@@ -196,8 +235,9 @@ public class AI {
         //game.playBuildOption(x, y);
         updateLists();
 
-        String temp = tile.getTileTypeString() + " " + x + " " + y + " " + ornt + " ";
-        temp += bNum + " " + xb + " " + yb;
+        String temp = tile.getTileTypeString() + " " + x + " " + y + " " + ornt + " " + bNum + " " + xb + " " + yb;
+        //temp += bNum + " " + xb + " " + yb;
+        //System.out.print("asddddddddddddddddddddddddddddddddd" + bNum);
         if(bNum == 1){
             temp+= " " + t.getTerrainText();
         }

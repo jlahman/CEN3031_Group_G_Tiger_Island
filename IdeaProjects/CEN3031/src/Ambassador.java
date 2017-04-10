@@ -3,24 +3,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+//10.136.31.59 6969 G heygang
 /**
  * Created by Justin Lahman on 4/6/17.
  */
 public class Ambassador {
 ///*
-    private String CRLF;
+    private String CRLF= "";
     private AI gameController1;
     private AI gameController2;
 
     private String hostName;
     private int portNumber;
     private Socket mSocket;
-    private PrintWriter out;
+    private PrintWriter outt;
     private BufferedReader in;
 
-    private int moveNum1 = 1;
-    private int moveNum2 = 1;
+    private int moveNum1 = 0;
+    private int moveNum2 = 0;
 
     private boolean done;
     private String pid;
@@ -38,13 +38,13 @@ public class Ambassador {
         this.portNumber = portnumber;
         this.username = username;
         this.password = password;
-         CRLF = "\r\n";
+        // CRLF = "\r\n";
     }
 
     public void init(){
         try{
             mSocket = new Socket(hostName, portNumber);
-            out = new PrintWriter(mSocket.getOutputStream(), true);
+            outt = new PrintWriter(mSocket.getOutputStream(), false);
             in = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
         } catch (Exception e){
             System.err.println("Error occured: " + e.getMessage());
@@ -56,10 +56,10 @@ public class Ambassador {
         this.portNumber = portnumber;
         this.username = username;
         this.password = password;
-
+       // CRLF = "\r\n";
         try{
             mSocket = new Socket(hostName, portNumber);
-            out = new PrintWriter(mSocket.getOutputStream(), true);
+            outt = new PrintWriter(mSocket.getOutputStream(), false);
             in = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
         } catch (Exception e){
             System.err.println("Error occured: " + e.getMessage());
@@ -71,7 +71,7 @@ public class Ambassador {
         try{
             while(!done){
                 message = in.readLine();
-
+                System.out.println("Server: " + message);
                 actOnMessage(message);
 
             }
@@ -79,10 +79,12 @@ public class Ambassador {
             e.printStackTrace();
         }
     }
-
+//10.136.31.59 6969 G heygang
     public void sendMessage(String message){
         try{
-            out.println(message);
+            System.out.println("Client: " +message);
+            outt.println(message);
+            outt.flush();
         } catch (Exception e) {
 
         }
@@ -93,10 +95,10 @@ public class Ambassador {
 
         String reply = "";
         if(message[0].equals("WELCOME")){
-            reply = "ENTER THUNDERDOME " + password + CRLF;
+            reply = "ENTER THUNDERDOME " + password;
         }
         else if(message[0].equals("TWO")){
-            reply = "I AM " + username + " " + username + CRLF;
+            reply = "I AM " + username + " " + username;
         }
         else if(message[0].equals("WAIT") && message[3].equals("TOURNAMENT")){
             pid = message[message.length-1];
@@ -109,7 +111,9 @@ public class Ambassador {
         }
         else if(message[0].equals("NEW") && message[1].equals("MATCH")){
             gameController1.startNewGame();
+            moveNum1 = 0;
             gameController2.startNewGame();
+            moveNum2 = 0;
         }
         else if(message[0].equals("MAKE")){
             reply = actionMakeMove(message);
@@ -144,7 +148,7 @@ public class Ambassador {
                 Tile tile = getTileFromString(message[7]);
                 int x = getCoordX(toInt(message[9]), toInt(message[10]), toInt(message[11]));
                 int y = getCoordY(toInt(message[9]), toInt(message[10]), toInt(message[11]));
-                int orientation = toInt(message[12]);
+                int orientation = toInt(message[12]) + 1;
 
                 int xb = getCoordX(toInt(message[16]), toInt(message[17]), toInt(message[18]));
                 int yb = getCoordY(toInt(message[16]), toInt(message[17]), toInt(message[18]));
@@ -227,23 +231,23 @@ public class Ambassador {
         String[] tileArr = tile.split("\\+");
         String temp = "";
         switch (tileArr[0].charAt(0)){
-            case 'J': temp = "Jungle-";
+            case 'J': temp = "J";
                 break;
-            case 'L': temp = "Lake-";
+            case 'L': temp = "L";
                 break;
-            case 'G': temp = "Grasslands-";
+            case 'G': temp = "G";
                 break;
-            case 'R': temp = "Rockey-";
+            case 'R': temp = "R";
                 break;
         }
         switch (tileArr[1].charAt(0)){
-            case 'J': temp += "Jungle";
+            case 'J': temp += "J";
                 break;
-            case 'L': temp += "Lake";
+            case 'L': temp += "L";
                 break;
-            case 'G': temp += "Grasslands";
+            case 'G': temp += "G";
                 break;
-            case 'R': temp += "Rockey";
+            case 'R': temp += "R";
                 break;
         }
         return new Tile(TileType.valueOf(temp));
@@ -267,7 +271,7 @@ public class Ambassador {
         String gid = message[5];
         String prefix = "";
         prefix = "GAME " + gid + " " + "MOVE" + " ";
-        int time = toInt(message[7]) * 1000;
+        int time = 1500;//toInt(message[7]) * 1000;
         if(gameController1.getGameID() == null){
             gameController1.setGameID(gid);
             reply = prefix + moveNum1 + " ";
@@ -297,8 +301,30 @@ public class Ambassador {
     private String getMoveAsString(String move){
         String[] temp = move.split("\\s+");
         //reveiw
+        String[] tileArr = temp[0].split("-");
+        String temp2 = "";
+        switch (tileArr[0].charAt(0)){
+            case 'J': temp2 = "J";
+                break;
+            case 'L': temp2 = "L";
+                break;
+            case 'G': temp2 = "G";
+                break;
+            case 'R': temp2 = "R";
+                break;
+        }
+        switch (tileArr[1].charAt(0)){
+            case 'J': temp2 += "J";
+                break;
+            case 'L': temp2 += "L";
+                break;
+            case 'G': temp2 += "G";
+                break;
+            case 'R': temp2 += "R";
+                break;
+        }
         String tt = "";
-        switch(TileType.valueOf(temp[0])){
+        switch(TileType.valueOf(temp2)){
             case JJ: tt = "JUNGLE+JUNGLE";
             break;
             case JG: tt = "JUNGLE+GRASS";
@@ -334,7 +360,13 @@ public class Ambassador {
         }
 
         String buildText = "";
-        switch(toInt(temp[4])){
+        int i = toInt(temp[4]);
+        if(i == 0){
+            buildText = "FOUND SETTLEMENT AT ";
+        }
+        switch(i){
+            case -1: buildText = "UNABLE TO BUILD";
+            break;
             case 0: buildText = "FOUND SETTLEMENT AT ";
             break;
             case 1: buildText = "EXPAND SETTLEMENT AT ";
@@ -344,11 +376,22 @@ public class Ambassador {
             case 3: buildText = "BUILD TIGER PLAYGROUND AT ";
             break;
         }
-        String bleh = "PLACE " + tt + " " + to3D(toInt(temp[1]), toInt(temp[2])) + " " + temp[3] + " " + buildText + to3D(toInt(temp[1]), toInt(temp[2]));
+        String bleh = "PLACE " + tt + " " + to3D(toInt(temp[1]), toInt(temp[2])) + " " + temp[3] + " " + buildText;
+               if(i != -1) bleh +=  to3D(toInt(temp[5]), toInt(temp[6]));
         if(toInt(temp[4]) == 1){
-            bleh += " " + temp[7];
+            String daveTermTerrain = "";
+            switch (temp[7].charAt(0)){
+                case 'J': daveTermTerrain = "JUNGLE";
+                    break;
+                case 'L': daveTermTerrain = "LAKE";
+                    break;
+                case 'G': daveTermTerrain = "GRASS";
+                    break;
+                case 'R': daveTermTerrain = "ROCK";
+                    break;
+            }            bleh += " " + daveTermTerrain;
         }
-        return bleh += CRLF;
+        return bleh;// += CRLF;
     }
 
     private String to3D(int x, int z){
