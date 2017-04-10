@@ -90,7 +90,7 @@ public class Ambassador {
         }
     }
 
-    private void actOnMessage(String sentMessage){
+    protected void actOnMessage(String sentMessage){
         String[] message = sentMessage.split("\\s+");
 
         String reply = "";

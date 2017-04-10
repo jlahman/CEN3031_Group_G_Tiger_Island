@@ -193,6 +193,7 @@ public class AI {
         } else if(buildSettlement.size() != 0){
             n = 0;
         }
+        //n = 0;
          //rand.nextInt(4);
         switch (n){
             case 0:if(buildSettlement.size() > 0)
@@ -271,6 +272,10 @@ public class AI {
     }
 
     public void updateEnemyMove(Tile t, int x, int y, int connectingHex, int buildOptionNumber, int xb, int yb, Terrain terrainType) {
+        x = x + game.board.rootHex.indexX;
+        y = y + game.board.rootHex.indexY;
+        xb = xb + game.board.rootHex.indexX;
+        yb = yb + game.board.rootHex.indexY;
         game.board.placeTile(t, game.board.hexArr[x][y], connectingHex);
         game.setBuildOption(buildOptionNumber, xb, yb, terrainType);
     }
