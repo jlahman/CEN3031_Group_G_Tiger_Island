@@ -12,7 +12,7 @@ public class BuildOptions {
     public void buildSettlement (Board board, Hex hex, Player p) {
         if(isBuildSettlementValid(hex, p.getMeepleCount())){
             //Hex settlementHex = hex;
-           hex.addMeeple();
+           hex.addMeeple(p);
             hex.setOwner(p);
             p.increaseScore(1);
 
@@ -41,11 +41,13 @@ public class BuildOptions {
 
     private void joinSettlements(Board board, int id){
         for (Settlement s: settlementsToJoin){
-            combineSettlements(board, id, s);
-        }
-        for (Settlement s: settlementsToJoin){
             board.settlementList.remove(s);
         }
+
+        for (Settlement s: settlementsToJoin){
+            combineSettlements(board, id, s);
+        }
+
 
     }
 
@@ -139,7 +141,7 @@ public class BuildOptions {
             if(!temp.hexesInSettlement.contains(hex)){
                 temp.addHex(hex);
                 placedHexes.add(hex);
-                hex.addMeeple();
+                hex.addMeeple(p);
                 p.increaseScore(hex.getMeeple() * hex.getLevel());
             }
         }
@@ -175,7 +177,7 @@ public class BuildOptions {
     // Place Totoro
     public void buildTotoroSanctuary(Board board, Hex hex, Player p){
         if(isBuildTotoroSanctuaryValid(board, hex, p)){
-            hex.addTotoro();
+            hex.addTotoro(p);
             int id = findAdjSettlementForTotoro(board, hex, p);
             board.settlementList.get(id).addHex(hex);
             placedHexes.add(hex);
@@ -242,7 +244,7 @@ public class BuildOptions {
     // Build tiger sanctuary
     public void buildTigerSanctuary(Board board, Hex hex, Player p){
         if(isBuildTigerSanctuaryValid(board, hex, p)){
-            hex.addTiger();
+            hex.addTiger(p);
             int id = findAdjSettlementForTiger(board, hex, p);
             board.settlementList.get(id).addHex(hex);
             placedHexes.add(hex);

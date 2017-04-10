@@ -96,16 +96,19 @@ public class Hex {
             this.meeple = meeple;
     }
 
-    public void addMeeple(){
+    public void addMeeple(Player p){
         this.meeple = this.level;
+        p.decreaseMeepleCount(this.level);
     }
 
-    public void addTotoro(){
+    public void addTotoro(Player p){
         this.totoro = 1;
+        p.decreaseTotoroCount(1);
     }
 
-    public void addTiger(){
+    public void addTiger(Player p){
         this.tiger = 1;
+        p.decreaseTigerCount(1);
     }
 
     public int getTotoro() {

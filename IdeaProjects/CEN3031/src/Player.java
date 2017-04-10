@@ -45,6 +45,18 @@ public class Player {
         score = score + delta;
     }
 
+    public void decreaseMeepleCount(int i){
+        this.meepleCount = this.meepleCount - i;
+    }
+
+    public void decreaseTotoroCount(int i){
+        this.meepleCount = this.meepleCount - i;
+    }
+
+    public void decreaseTigerCount(int i){
+        this.meepleCount = this.meepleCount - i;
+    }
+
     public int getScore(){
         return score;
     }
