@@ -11,11 +11,11 @@ public class AI {
     private String gameID;
     private boolean gameEnd = false;
 
-    private List<int[]> validTilePlacement = new Vector<int[]>();
+    public List<int[]> validTilePlacement = new Vector<int[]>();
     public List<int[]> buildSettlement = new Vector<int[]>();
-    private List<int[]> expandSettlement = new Vector<int[]>();
-    private List<int[]> buildTotoro= new Vector<int[]>();
-    private List<int[]> buildTiger = new Vector<int[]>();
+    public List<int[]> expandSettlement = new Vector<int[]>();
+    public List<int[]> buildTotoro= new Vector<int[]>();
+    public List<int[]> buildTiger = new Vector<int[]>();
 
 
     public AI() {
@@ -32,7 +32,7 @@ public class AI {
         updateLists();
     }
 
-    private void updateLists(){
+    protected void updateLists(){
         updateValidTilePlacement();
         updateBuildSettlement();
         updateExpandSettlement();

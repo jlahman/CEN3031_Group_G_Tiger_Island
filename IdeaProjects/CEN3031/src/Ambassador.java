@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-//10.136.31.59 6969 G heygang
+//10.136.31.59 6969 G G_password heygang
 /**
  * Created by Justin Lahman on 4/6/17.
  */
@@ -28,16 +28,18 @@ public class Ambassador {
     private String rid;
     private String username;
     private String password;
+    private String tPassword;
 
     public Ambassador(){
 
     }
 
-    public Ambassador(String hostname, int portnumber, String username, String password){
+    public Ambassador(String hostname, int portnumber, String username, String password, String tpassword){
         this.hostName = hostname;
         this.portNumber = portnumber;
         this.username = username;
         this.password = password;
+        this.tPassword = tpassword;
         // CRLF = "\r\n";
     }
 
@@ -51,12 +53,14 @@ public class Ambassador {
         }
     }
 
-    public void init(String hostname, int portnumber, String username, String password){
+    public void init(String hostname, int portnumber, String username, String password, String tpassword){
         this.hostName = hostname;
         this.portNumber = portnumber;
         this.username = username;
         this.password = password;
-       // CRLF = "\r\n";
+        this.tPassword = tpassword;
+
+        // CRLF = "\r\n";
         try{
             mSocket = new Socket(hostName, portNumber);
             outt = new PrintWriter(mSocket.getOutputStream(), false);
