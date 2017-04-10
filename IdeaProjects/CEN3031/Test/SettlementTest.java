@@ -104,4 +104,13 @@ public class SettlementTest {
         Assert.assertNotEquals(settlement0.getOwner(), dummyPlayer1);
     }
 
+    @Test
+    public void hasTotoroTest() throws Exception {
+        Hex dummyHexToAddTotoro = new Hex();
+        dummyHexToAddTotoro.setTotoro(1);
+
+        settlement0.addHex(dummyHexToAddTotoro);
+        Assert.assertEquals(settlement0.hasTotoro(), true);
+    }
+
 }
