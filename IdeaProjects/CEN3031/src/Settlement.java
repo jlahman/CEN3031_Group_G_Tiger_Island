@@ -50,8 +50,9 @@ public class Settlement {
     }
 
     public Player getOwner(){
-        if(hexesInSettlement.size() == 0)
+        if(hexesInSettlement.size() == 0) {
             return null;
+        }
         return hexesInSettlement.get(0).getOwner();
     }
 
