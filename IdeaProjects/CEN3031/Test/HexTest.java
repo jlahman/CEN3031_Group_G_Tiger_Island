@@ -48,21 +48,21 @@ public class HexTest {
     public void addMeepleTest() throws Exception {
         h = new Hex();
         h.setLevel(4);
-        h.addMeeple();
+        h.addMeeple(new Player(""));
         assertEquals(4, h.getMeeple());
     }
 
     @Test
     public void addTotoroTest() throws Exception {
         h = new Hex();
-        h.addTotoro();
+        h.addTotoro(new Player(""));
         assertEquals(1, h.getTotoro());
     }
 
     @Test
     public void addTigerTest() throws Exception {
         h = new Hex();
-        h.addTiger();
+        h.addTiger(new Player(""));
         assertEquals(1, h.getTiger());
     }
 
