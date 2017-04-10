@@ -63,5 +63,4 @@ public class Settlement {
         }
         return false;
     }
-
 }

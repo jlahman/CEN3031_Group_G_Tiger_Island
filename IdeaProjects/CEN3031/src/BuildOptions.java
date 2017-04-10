@@ -11,18 +11,18 @@ public class BuildOptions {
     // Build settlement
     public void buildSettlement (Board board, Hex hex, Player p) {
         if(isBuildSettlementValid(hex, p.getMeepleCount())){
-            Hex settlementHex = hex;
-            settlementHex.addMeeple();
-            settlementHex.setOwner(p);
+            //Hex settlementHex = hex;
+           hex.addMeeple();
+            hex.setOwner(p);
             p.increaseScore(1);
 
             int settlementID = board.settlementList.size();
-            board.settlementList.add(new Settlement(settlementHex, settlementID));
+            board.settlementList.add(new Settlement(hex, settlementID));
 
-            placedHexes.add(settlementHex);
+            placedHexes.add(hex);
 
             checkForAdjSettlements(board);
-            joinSettlements(board, settlementHex.getSettlementID());
+            joinSettlements(board, hex.getSettlementID());
             cleanLists();
         }
     }

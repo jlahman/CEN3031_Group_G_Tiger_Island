@@ -146,11 +146,11 @@ public class AI {
     }
 
     private void resetLists(){
-        buildSettlement = new Vector<int[]>();
-        expandSettlement = new Vector<int[]>();
-        buildTotoro= new Vector<int[]>();
-        buildTiger = new Vector<int[]>();
-        validTilePlacement = new Vector<int[]>();
+        buildSettlement.removeAll(buildSettlement);
+        expandSettlement.removeAll(expandSettlement);// = new Vector<int[]>();
+        buildTotoro.removeAll(buildTotoro);//= new Vector<int[]>();
+        buildTiger.removeAll(buildTiger);// = new Vector<int[]>();
+        validTilePlacement.removeAll(validTilePlacement);// = new Vector<int[]>();
     }
 
     public String playMove(Tile tile, int time) {
@@ -161,6 +161,19 @@ public class AI {
         x = x - game.board.rootHex.indexX;
         int y = validTilePlacement.get(n)[1];
         y = y - game.board.rootHex.indexY;
+        int connectingHex = validTilePlacement.get(n)[3];
+        if(connectingHex == 1){
+            x = game.board.getAdjHexIndexX(game.board.hexArr[validTilePlacement.get(n)[0]][validTilePlacement.get(n)[1]], (3 + validTilePlacement.get(n)[2])%6);
+            x = x - game.board.rootHex.indexX;
+            y = game.board.getAdjHexIndexY(game.board.hexArr[validTilePlacement.get(n)[0]][validTilePlacement.get(n)[1]], (3 + validTilePlacement.get(n)[2])%6);
+            y = y - game.board.rootHex.indexY;
+        } else if(connectingHex == 2){
+            x = game.board.getAdjHexIndexX(game.board.hexArr[validTilePlacement.get(n)[0]][validTilePlacement.get(n)[1]], (4 + validTilePlacement.get(n)[2])%6);
+            x = x - game.board.rootHex.indexX;
+            y = game.board.getAdjHexIndexY(game.board.hexArr[validTilePlacement.get(n)[0]][validTilePlacement.get(n)[1]], (4 + validTilePlacement.get(n)[2])%6);
+            y = y - game.board.rootHex.indexY;
+        }
+
 
         int ornt = validTilePlacement.get(n)[2] + 1;
         tile.setOrientation(ornt -1);

@@ -163,6 +163,14 @@ public class Ambassador {
                     bo = 3;
                 }
 
+                if(gameController1.getGameID() == null){
+                    gameController1.setGameID(gid);
+
+                }
+                else if (gameController2.getGameID() == null) {
+                    gameController2.setGameID(gid);
+
+                }
                 if (gid.equals(gameController1.getGameID())) {
                     moveNum1++;
                     if (message[13].equals("EXPANDED")) {
@@ -216,7 +224,7 @@ public class Ambassador {
                 } else {
                     gameController2.endGame();
                 }
-            } else {
+            } else if(message[6].equals("FORFEITED:") || message[6].equals("LOST:"))  {
                 String gid = message[1];
                 if (gid.equals(gameController1.getGameID())) {
                     gameController1.endGame();
@@ -376,7 +384,7 @@ public class Ambassador {
             case 3: buildText = "BUILD TIGER PLAYGROUND AT ";
             break;
         }
-        String bleh = "PLACE " + tt + " " + to3D(toInt(temp[1]), toInt(temp[2])) + " " + temp[3] + " " + buildText;
+        String bleh = "PLACE " + tt + " AT " + to3D(toInt(temp[1]), toInt(temp[2])) + " " + temp[3] + " " + buildText;
                if(i != -1) bleh +=  to3D(toInt(temp[5]), toInt(temp[6]));
         if(toInt(temp[4]) == 1){
             String daveTermTerrain = "";

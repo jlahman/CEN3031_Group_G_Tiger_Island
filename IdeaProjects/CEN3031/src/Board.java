@@ -172,7 +172,7 @@ public class Board {
         return false;
     }
 
-    private int getAdjHexIndexX(Hex hex, int index){
+    protected int getAdjHexIndexX(Hex hex, int index){
         int tempX = -1;
         switch(index){
             case 0: tempX = hex.indexX;
@@ -191,7 +191,7 @@ public class Board {
         return tempX;
     }
 
-    private int getAdjHexIndexY(Hex hex, int index){
+    protected int getAdjHexIndexY(Hex hex, int index){
         int tempY = -1;
         switch(index){
             case 0: tempY = (hex.indexY + tileNumber- 1)%tileNumber;
