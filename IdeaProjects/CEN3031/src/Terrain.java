@@ -10,15 +10,15 @@ public enum Terrain {
         ROCKY("Rocky"),
         VOLCANO("Volcano");
         private String terrainText;
-        //Constructor
+        // Constructor
         private Terrain(String terrainText){
             this.terrainText = terrainText;
         }
-        //Getter
+        // Getter
         public String getTerrainText(){
             return terrainText;
         }
-        //Setter
+        // Setter
         public void setTerrainText(String Terrain){
             terrainText = Terrain;
         }
