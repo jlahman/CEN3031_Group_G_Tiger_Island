@@ -5,12 +5,26 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.api.java8.En;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.*;
+
 public class TileStepDefs implements En {
+
+    Tile t1 = new Tile(TileType.JJ);
+    Board b = new Board();
+    Player p = new Player("user1");
+    BuildOptions bo = new BuildOptions();
+    boolean selectVolcano = false;
 
     @Given("^No tiles have been placed on the board$")
     public void noTilesHaveBeenPlacedOnTheBoard() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+
     }
 
     @Given("^There are existing tiles on the board$")
