@@ -25,6 +25,26 @@ public class SettlementTest {
     }
 
     @Test
+    public void setSettlementIDTest() throws Exception {
+        hex0 = new Hex();
+        settlement0 = new Settlement(hex0, 0);
+
+        settlement0.setSettlementID(1);
+        Assert.assertEquals(settlement0.getSettlementID(), 1);
+        Assert.assertEquals(hex0.getSettlementID(), 1);
+    }
+
+    @Test
+    public void setSettlementIDWrongTest() throws Exception {
+        hex0 = new Hex();
+        settlement0 = new Settlement(hex0, 0);
+
+        settlement0.setSettlementID(2);
+        Assert.assertNotEquals(settlement0.getSettlementID(), 1);
+        Assert.assertNotEquals(hex0.getSettlementID(), 1);
+    }
+
+    @Test
     public void addHexToSettlement() throws Exception {
         Hex dummyHex = new Hex(Terrain.JUNGLE);
         settlement0.addHex(dummyHex);
