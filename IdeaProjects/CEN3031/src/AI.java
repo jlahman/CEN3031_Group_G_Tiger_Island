@@ -267,6 +267,9 @@ public class AI {
         y = y + game.board.rootHex.indexY;
         xb = xb + game.board.rootHex.indexX;
         yb = yb + game.board.rootHex.indexY;
+
+
+
         game.board.placeTile(t, game.board.hexArr[x][y], connectingHex);
         game.setBuildOption(buildOptionNumber, xb, yb);
     }

@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-//10.136.31.59 6969 G G_password heygang
+//192.168.1.36 666 G G FurRealz
 /**
  * Created by Justin Lahman on 4/6/17.
  */
@@ -19,9 +19,6 @@ public class Ambassador {
     private PrintWriter outt;
     private BufferedReader in;
 
-    private int moveNum1 = 0;
-    private int moveNum2 = 0;
-
     private boolean done;
     private String pid;
     private String cid;
@@ -29,6 +26,8 @@ public class Ambassador {
     private String username;
     private String password;
     private String tPassword;
+
+    private  long sTime;
 
     public Ambassador(){
 
@@ -75,7 +74,8 @@ public class Ambassador {
         try{
             while(!done){
                 message = in.readLine();
-                System.out.println("Server: " + message);
+                sTime = System.nanoTime();
+                System.out.println("Server @ T= "+ sTime +": "+ message);
                 actOnMessage(message);
 
             }
@@ -86,7 +86,7 @@ public class Ambassador {
 //10.136.31.59 6969 G heygang
     public void sendMessage(String message){
         try{
-            System.out.println("Client: " +message);
+            System.out.println("Client @ Tdelta = " + (sTime - System.nanoTime()) + ": " +message);
             outt.println(message);
             outt.flush();
         } catch (Exception e) {
@@ -99,10 +99,10 @@ public class Ambassador {
 
         String reply = "";
         if(message[0].equals("WELCOME")){
-            reply = "ENTER THUNDERDOME " + password;
+            reply = "ENTER THUNDERDOME " + tPassword;
         }
         else if(message[0].equals("TWO")){
-            reply = "I AM " + username + " " + username;
+            reply = "I AM " + username + " " + password;
         }
         else if(message[0].equals("WAIT") && message[3].equals("TOURNAMENT")){
             pid = message[message.length-1];
@@ -115,9 +115,7 @@ public class Ambassador {
         }
         else if(message[0].equals("NEW") && message[1].equals("MATCH")){
             gameController1.startNewGame();
-            moveNum1 = 0;
             gameController2.startNewGame();
-            moveNum2 = 0;
         }
         else if(message[0].equals("MAKE")){
             reply = actionMakeMove(message);
@@ -152,7 +150,8 @@ public class Ambassador {
                 Tile tile = getTileFromString(message[7]);
                 int x = getCoordX(toInt(message[9]), toInt(message[10]), toInt(message[11]));
                 int y = getCoordY(toInt(message[9]), toInt(message[10]), toInt(message[11]));
-                int orientation = toInt(message[12]) + 1;
+                int orientation = toInt(message[12]) -1;
+                tile.setOrientation(orientation);
 
                 int xb = getCoordX(toInt(message[16]), toInt(message[17]), toInt(message[18]));
                 int yb = getCoordY(toInt(message[16]), toInt(message[17]), toInt(message[18]));
@@ -176,7 +175,6 @@ public class Ambassador {
 
                 }
                 if (gid.equals(gameController1.getGameID())) {
-                    moveNum1++;
                     if (message[13].equals("EXPANDED")) {
                         Terrain t = null;
                         switch (message[19].charAt(0)) {
@@ -199,7 +197,6 @@ public class Ambassador {
 
                 } else {
                     if (gid.equals(gameController2.getGameID())) {
-                        moveNum2++;
                         if (message[13].equals("EXPANDED")) {
                             Terrain t = null;
                             switch (message[19].charAt(0)) {
@@ -216,9 +213,10 @@ public class Ambassador {
                                     t = Terrain.ROCKY;
                                     break;
                             }
-                            gameController2.updateEnemyMove(tile, x, y, orientation, 1, xb, yb, t);//build params)
+                            //TODO make sure that xy on hexArr not null
+                            gameController2.updateEnemyMove(tile, x, y, 0, 1, xb, yb, t);//build params)
                         }
-                        gameController2.updateEnemyMove(tile, x, y, orientation, bo, xb, yb);
+                        gameController2.updateEnemyMove(tile, x, y, 0, bo, xb, yb);
                     }
                 }
             } else if (message[2].equals("OVER")) {
@@ -286,27 +284,23 @@ public class Ambassador {
         int time = 1500;//toInt(message[7]) * 1000;
         if(gameController1.getGameID() == null){
             gameController1.setGameID(gid);
-            reply = prefix + moveNum1 + " ";
+            reply = prefix + message[10] + " ";
             reply += getMoveAsString(gameController1.playMove(tile, time));
         }
         else if (gameController2.getGameID() == null) {
             gameController2.setGameID(gid);
-            reply = prefix + moveNum2 + " ";;
+            reply = prefix + message[10] + " ";;
             reply += getMoveAsString(gameController2.playMove(tile, time));
         }
         else if(gid.equals(gameController1.getGameID())){
-            reply = prefix + moveNum1 + " ";;
+            reply = prefix + message[10] + " ";;
             reply += getMoveAsString(gameController1.playMove(tile, time));
         }
         else if(gid.equals(gameController2.getGameID())){
-            reply = prefix + moveNum2 + " ";;
+            reply = prefix + message[10] + " ";;
             reply += getMoveAsString(gameController2.playMove(tile, time));
         }
 
-        if(gid.equals(gameController1.getGameID()))
-            moveNum1++;
-        else if(gid.equals(gameController2.getGameID()))
-            moveNum2++;
         return reply;
     }
 

@@ -40,6 +40,16 @@ public class Board {
         }
     }
 
+    public void placeTile(Tile tile, int x, int y, int connectingHex){
+        if(hexArr[x][y] == null){
+            hexArr[x][y] = new Hex();
+            hexArr[x][y].indexX = x;
+            hexArr[x][y].indexY = y;
+        }
+
+        placeTile(tile, hexArr[x][y], connectingHex);
+    }
+
     private void updateSettlementList( Hex oldHex){
         if(oldHex.getSettlementID() != -1){
             int oldID = oldHex.getSettlementID();
