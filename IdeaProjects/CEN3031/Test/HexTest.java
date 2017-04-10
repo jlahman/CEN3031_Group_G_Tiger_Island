@@ -107,4 +107,10 @@ public class HexTest {
         h.setSettlementID(23);
         assertEquals(23, h.getSettlementID());
     }
+
+    @Test
+    public void getTerrainText() throws Exception {
+        h = new Hex(Terrain.JUNGLE);
+        assertEquals("Jungle", h.getTerrainAsString());
+    }
 }
