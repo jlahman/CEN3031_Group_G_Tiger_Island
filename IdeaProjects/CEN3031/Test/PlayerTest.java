@@ -10,8 +10,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PlayerTest {
-    Player p;
-    String name;
+    private Player p;
+    private String name;
 
     @Before
     public void setUp() throws Exception {
