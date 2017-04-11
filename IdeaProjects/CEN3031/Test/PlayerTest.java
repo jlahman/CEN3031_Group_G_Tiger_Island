@@ -60,4 +60,11 @@ public class PlayerTest {
         p.setTigerCount(-1);
         assertFalse(p.getTigerCount()==-1);
     }
+
+    @Test
+    public void increaseScoreTest() throws Exception {
+        p.increaseScore(50);
+        p.increaseScore(2);
+        assertEquals(52,p.getScore());
+    }
 }
