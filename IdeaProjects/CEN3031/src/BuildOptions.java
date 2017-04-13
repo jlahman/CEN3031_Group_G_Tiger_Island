@@ -81,7 +81,7 @@ public class BuildOptions {
 
     // Expand settlement
     public void expandSettlement(Board board, int settlementID, Terrain terrain, Player p){
-        if(isExpandSettlementValid(board, settlementID, terrain, p.getMeepleCount())){
+        if(isExpandSettlementValid(board, settlementID, terrain, p)){
             addHexesToSettlement(board, settlementID, terrain, p);
 
             checkForAdjSettlements(board);
@@ -90,17 +90,19 @@ public class BuildOptions {
         }
     }
 
-    public boolean isExpandSettlementValid(Board board, int settlementID, Terrain terrain, int remainingMeeple){
+    public boolean isExpandSettlementValid(Board board, int settlementID, Terrain terrain, Player p){
         /*check all tiles going to be adding check the levels
         and sum to see if enough meeples remaining
         in expand settlement its remaining meeples*/
         boolean isValidTerrain = (terrain != Terrain.VOLCANO); //non volcano terrain type
         boolean isAdjTerrain = false;
-
+        boolean isPlayer = false;
 
         //At least one hex of the same terrain type adj to the settlement
         //Settlement contains a list hexes as a vector
         Settlement  temp = board.settlementList.get(settlementID);
+        if(temp.getOwner() == p)
+            isPlayer = true;
         //for each hex in the settlement, check adj hexes
         /*Hex hex = null;
         int j=0;
@@ -134,8 +136,8 @@ public class BuildOptions {
                 needMeepleNum += tempHex.getLevel();
             }
         }
-        boolean isEnoughMeeple = (remainingMeeple >= needMeepleNum);
-        return(isValidTerrain && isEnoughMeeple && isAdjTerrain);
+        boolean isEnoughMeeple = (p.getMeepleCount() >= needMeepleNum);
+        return(isValidTerrain && isEnoughMeeple && isAdjTerrain && isPlayer);
     }
 
     private void addHexesToSettlement(Board board, int settlementID, Terrain terrain, Player p){
@@ -242,7 +244,7 @@ public class BuildOptions {
             settlementHasTotoro = board.settlementList.get(id).hasTotoro();
         }
 
-        return (isValidTerrain && settlementIsLargeEnough && !settlementHasTotoro && hexIsEmpty && hasEnoughTotoro);
+        return (isValidTerrain && settlementIsLargeEnough && !settlementHasTotoro && hexIsEmpty && hasEnoughTotoro && hex.getLevel() != 0);
     }
 
     // Build tiger sanctuary

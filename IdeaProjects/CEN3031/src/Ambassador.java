@@ -3,7 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-//192.168.1.36 666 G G FurRealz
+//192.168.1.41 1337 TEAM_G PASS_G TigersRule
+//10.136.15.159 6969 G G heygang
+//127.0.0.1 6969 A A heygang
 /**
  * Created by Justin Lahman on 4/6/17.
  */
@@ -152,18 +154,27 @@ public class Ambassador {
                 int y = getCoordY(toInt(message[9]), toInt(message[10]), toInt(message[11]));
                 int orientation = toInt(message[12]) -1;
                 tile.setOrientation(orientation);
-
-                int xb = getCoordX(toInt(message[16]), toInt(message[17]), toInt(message[18]));
-                int yb = getCoordY(toInt(message[16]), toInt(message[17]), toInt(message[18]));
+                int xb = 0;
+                int yb = 0;
 
                 int bo = -1;
 
                 if (message[13].equals("FOUNDED")) {
                     bo = 0;
+                     xb = getCoordX(toInt(message[message.length - 3]), toInt(message[message.length - 2]), toInt(message[message.length - 1]));
+                     yb = getCoordY(toInt(message[message.length - 3]), toInt(message[message.length - 2]), toInt(message[message.length - 1]));
                 } else if (message[14].equals("TOTORO")) {
                     bo = 2;
+                     xb = getCoordX(toInt(message[message.length - 3]), toInt(message[message.length - 2]), toInt(message[message.length - 1]));
+                     yb = getCoordY(toInt(message[message.length - 3]), toInt(message[message.length - 2]), toInt(message[message.length - 1]));
                 } else if (message[14].equals("TIGER")) {
                     bo = 3;
+                     xb = getCoordX(toInt(message[message.length - 3]), toInt(message[message.length - 2]), toInt(message[message.length - 1]));
+                     yb = getCoordY(toInt(message[message.length - 3]), toInt(message[message.length - 2]), toInt(message[message.length - 1]));
+                }else if (message[13].equals("EXPANDED")){
+                    bo = 1;
+                     xb = getCoordX(toInt(message[message.length - 4]), toInt(message[message.length - 3]), toInt(message[message.length - 2]));
+                     yb = getCoordY(toInt(message[message.length - 4]), toInt(message[message.length - 3]), toInt(message[message.length - 2]));
                 }
 
                 if(gameController1.getGameID() == null){
@@ -191,9 +202,9 @@ public class Ambassador {
                                 t = Terrain.ROCKY;
                                 break;
                         }
-                        gameController1.updateEnemyMove(tile, x, y, orientation, 1, xb, yb, t);//build params)
-                    }
-                    gameController1.updateEnemyMove(tile, x, y, orientation, bo, xb, yb);
+                        gameController1.updateEnemyMove(tile, x, y, 0, 1, xb, yb, t);//build params)
+                    }else
+                    gameController1.updateEnemyMove(tile, x, y, 0, bo, xb, yb);
 
                 } else {
                     if (gid.equals(gameController2.getGameID())) {
@@ -215,7 +226,7 @@ public class Ambassador {
                             }
                             //TODO make sure that xy on hexArr not null
                             gameController2.updateEnemyMove(tile, x, y, 0, 1, xb, yb, t);//build params)
-                        }
+                        }else
                         gameController2.updateEnemyMove(tile, x, y, 0, bo, xb, yb);
                     }
                 }

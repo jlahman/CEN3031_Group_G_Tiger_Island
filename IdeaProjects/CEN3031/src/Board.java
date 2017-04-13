@@ -37,6 +37,7 @@ public class Board {
 
             temp = getAdjHex(hexArr[oldHex.indexX][oldHex.indexY], (2 * connectingHex + tile.getOrientation() + 1) % 6);
             placeHex(tile.getTileHex((connectingHex + 2) % 3), temp);
+            System.out.println("Placeing tile at : " + (oldHex.indexX - rootHex.indexX) + " " +(oldHex.indexY - rootHex.indexY) + " "+ tile.getOrientation() + " "+ connectingHex);
         }
     }
 
@@ -78,11 +79,11 @@ public class Board {
             }
 
             if(settlementsToMake.size() > 1) {
+                settlementList.remove(oldHex.getSettlementID());
                 for (List<Hex> hexList : settlementsToMake) {
                     int settlementID = settlementList.size();
                     settlementList.add(new Settlement(hexList, settlementID));
                 }
-                settlementList.remove(oldHex.getSettlementID());
             }
         }
     }
