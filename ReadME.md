@@ -19,8 +19,9 @@ ReadME:
                         Project language level SDK default (8)
                          
                        
-## Testing                - One of our group members got up to 76% acceptance test coverage with cucumber.
-                       - We have 81% line coverage with unit tests.
+## Testing                
+                       - 76% acceptance test coverage with cucumber.
+                       - 81% line coverage with unit tests.
      
                         
 No other libraries or artifacts needed to run program. 
