@@ -25,7 +25,9 @@ No other libraries or artifacts needed to run program.
 ## Running the Project
 To run the program, input into the terminal parameters (seperated by spaces) for host_IP Port Team_Username Team_Passsword Challenges
 
-Example(s): 192.168.1.41 1337 TEAM_G PASS_G TigersRule
+Example(s): 
+
+            192.168.1.41 1337 TEAM_G PASS_G TigersRule
             
             10.136.15.159 6969 G G heygang
             
