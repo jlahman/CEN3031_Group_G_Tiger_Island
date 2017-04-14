@@ -1,3 +1,5 @@
+import cucumber.api.java.tr.Ve;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -120,31 +122,45 @@ public class AI {
     }
 
     private void updateExpandSettlement(){
-        for (Settlement s : game.board.settlementList) {
-            Hex hex = s.hexesInSettlement.get(0);
-
-
-            for(int i = 0; i < 4; i++) {
-                int[] currentArr = new int[3];
-
-                currentArr[0] = hex.indexX;
-                currentArr[1] = hex.indexY;
-                currentArr[2] = i;
-                myIntArr tempArr = new myIntArr(currentArr);
-
-                if (game.build.isExpandSettlementValid(game.board, hex.getSettlementID(), Terrain.values()[i], game.player1)) {
-                    if(!expandSettlement.contains(tempArr)) {
-                        expandSettlement.add(tempArr);
-                    }
-
-                }else //if (!game.build.isExpandSettlementValid(game.board, hex.getSettlementID(), hex.getTerrain(), game.player1))
-                //{
-                   // if (expandSettlement.contains(currentArr)) {
-                        expandSettlement.remove(tempArr);
-                   // }
-                //}
+        Vector<myIntArr> expandToRemove = new Vector<myIntArr>();
+        for(myIntArr m: expandSettlement){
+            if (!game.build.isExpandSettlementValid(game.board, m.array[0], Terrain.values()[m.array[2]], game.player1)) {
+                expandToRemove.add(m);
             }
         }
+        //for(myIntArr move : expandToRemove){
+        expandSettlement.removeAll(expandToRemove);
+        //}
+
+
+        for (Settlement s : game.board.settlementList) {
+            Hex hex = s.hexesInSettlement.get(0);
+            if(hex.getOwner() == game.player1){
+
+                for(int i = 0; i < 4; i++) {
+                    int[] currentArr = new int[3];
+
+                    currentArr[0] = s.getSettlementID();//hex.indexX;
+                    currentArr[1] = -1;//hex.indexY;
+                    currentArr[2] = i;
+                    myIntArr tempArr = new myIntArr(currentArr);
+
+                    if (game.build.isExpandSettlementValid(game.board, s.getSettlementID(), Terrain.values()[i], game.player1)) {
+                        if(!expandSettlement.contains(tempArr)) {
+                            expandSettlement.add(tempArr);
+                        }
+
+                    }else //if (!game.build.isExpandSettlementValid(game.board, hex.getSettlementID(), hex.getTerrain(), game.player1))
+                    //{
+                       // if (expandSettlement.contains(currentArr)) {
+                            expandSettlement.remove(tempArr);
+                       // }
+                    //}
+                }
+            }
+
+        }
+
 
     }
 
@@ -232,7 +248,7 @@ public class AI {
             n = 2;
         }else if(buildTiger.size() != 0){
             n = 3;
-        } else if(expandSettlement.size() != 0 && flip == 0){
+        } else if(expandSettlement.size() != 0 && flip == 0&& game.player1.getMeepleCount() >5 ){
             n = 1;
         } else if(buildSettlement.size() != 0){
             n = 0;
@@ -254,14 +270,14 @@ public class AI {
                         n = rand.nextInt(expandSettlement.size());
                     else
                         break;
-                xbybbNum[0] = expandSettlement.get(n).array[0];
+                xbybbNum[0] = game.board.settlementList.get(expandSettlement.get(n).array[0]).hexesInSettlement.get(0).indexX;
                 xbybbNum[0] = xbybbNum[0] - game.board.rootHex.indexX;
-                xbybbNum[1] = expandSettlement.get(n).array[1];
+                xbybbNum[1] = game.board.settlementList.get(expandSettlement.get(n).array[0]).hexesInSettlement.get(0).indexY;
                 xbybbNum[1] = xbybbNum[1] - game.board.rootHex.indexY;
                 xbybbNum[2] = 1;
                 xbybbNum[3] = expandSettlement.get(n).array[2];
                 t = Terrain.values()[expandSettlement.get(n).array[2]];
-                game.playMove(1, expandSettlement.get(n).array[0], expandSettlement.get(n).array[1], t);
+                game.playMove(1, game.board.settlementList.get(expandSettlement.get(n).array[0]).hexesInSettlement.get(0).indexX, game.board.settlementList.get(expandSettlement.get(n).array[0]).hexesInSettlement.get(0).indexY, t);
                 break;
             case 2: if(buildTotoro.size() > 0)
                 n = rand.nextInt(buildTotoro.size());
@@ -283,7 +299,7 @@ public class AI {
                 xbybbNum[1] = buildTiger.get(n).array[1];
                 xbybbNum[1] = xbybbNum[1] - game.board.rootHex.indexY;
                 xbybbNum[2] = 3;
-                game.playMove(2, buildTiger.get(n).array[0], buildTotoro.get(n).array[1]);
+                game.playMove(3, buildTiger.get(n).array[0], buildTiger.get(n).array[1]);
                 break;
         }
         return xbybbNum;

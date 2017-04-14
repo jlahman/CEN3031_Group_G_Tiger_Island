@@ -52,7 +52,7 @@ public class Hex {
     }
 
     public boolean isEmpty() {
-        if(owner == null && meeple == 0 && tiger == 0 && totoro == 0)
+        if(owner == null && meeple == 0 && tiger == 0 && totoro == 0 && settlementID == -1)
             return true;
         return false;
     }
@@ -82,9 +82,7 @@ public class Hex {
     }
 
     public boolean hasTotoro(){
-        if(totoro > 0 && totoro < 2)
-            return true;
-        return false;
+      return (totoro == 1);
     }
 
     public int getMeeple() {
@@ -130,9 +128,7 @@ public class Hex {
     }
 
     public boolean hasTiger(){
-        if(tiger > 0 && tiger < 2)
-            return true;
-        return false;
+       return (tiger == 1);
     }
 
     public int getSettlementID() {

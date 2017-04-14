@@ -3,8 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-//192.168.1.41 1337 TEAM_G PASS_G TigersRule
-//10.136.15.159 6969 G G heygang
+//192.168.1.36 11111 TEAM_G PASS_G Iwanttobelieve
+//10.192.246.253 11111 TEAM_G PASS_G Iwanttobelieve
 //127.0.0.1 6969 A A heygang
 /**
  * Created by Justin Lahman on 4/6/17.
@@ -406,7 +406,8 @@ public class Ambassador {
                     break;
                 case 'R': daveTermTerrain = "ROCK";
                     break;
-            }            bleh += " " + daveTermTerrain;
+            }
+            bleh += " " + daveTermTerrain;
         }
         return bleh;// += CRLF;
     }

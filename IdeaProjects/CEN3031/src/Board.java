@@ -13,9 +13,15 @@ public class Board {
     private int tileNumber = 48*2*2;
 
     public Board(){
+
         rootHex = new Hex();
 
         hexArr = new Hex[tileNumber][tileNumber];
+        for(int i = 0; i < tileNumber; i++){
+            for(int j = 0; j < tileNumber; j++){
+                hexArr[i][j] = null;
+            }
+        }
         rootHex.indexX = rootHex.indexY = tileNumber/2;
         hexArr[rootHex.indexX][rootHex.indexY] = rootHex;
         for(int i = 0; i < 6; i++){
@@ -50,40 +56,48 @@ public class Board {
 
         placeTile(tile, hexArr[x][y], connectingHex);
     }
-
+//somehowsettlement size 0 exists after plaving on bleh
     private void updateSettlementList( Hex oldHex){
-        if(oldHex.getSettlementID() != -1){
+        if(oldHex.getSettlementID() != -1) {
+
             int oldID = oldHex.getSettlementID();
+            Player p = oldHex.getOwner();
             Settlement temp = settlementList.get(oldID);
-            temp.removeHex(oldHex);
 
-            List<Hex> tList = new Vector<Hex>();
-            List<List<Hex>> settlementsToMake = new Vector<List<Hex>>();
+            if (temp.settlementSize() != 1) {
+                temp.removeHex(oldHex);
 
-            for(int i = 0; i < 6; i++){
-                if(temp.hexesInSettlement.contains(getAdjHex(oldHex, i))){
-                    tList.add(getAdjHex(oldHex, i));
-                }
-            }
-            for (Hex hex : tList) {
-                boolean contains = false;
-                List<Hex> BFSList = BFSForSettlement(hex);
-                for(List<Hex> hexList : settlementsToMake){
-                    if(hexList.containsAll(BFSList)){
-                        contains = true;
-                        break;
+                List<Hex> tList = new Vector<Hex>();
+                List<List<Hex>> settlementsToMake = new Vector<List<Hex>>();
+
+                for (int i = 0; i < 6; i++) {
+                    if (temp.hexesInSettlement.contains(getAdjHex(oldHex, i))) {
+                        tList.add(getAdjHex(oldHex, i));
                     }
                 }
-                if(contains == false)
-                    settlementsToMake.add(BFSList);
-            }
-
-            if(settlementsToMake.size() > 1) {
-                settlementList.remove(oldHex.getSettlementID());
-                for (List<Hex> hexList : settlementsToMake) {
-                    int settlementID = settlementList.size();
-                    settlementList.add(new Settlement(hexList, settlementID));
+                for (Hex hex : tList) {
+                    boolean contains = false;
+                    List<Hex> BFSList = BFSForSettlement(hex);
+                    for (List<Hex> hexList : settlementsToMake) {
+                        if (hexList.containsAll(BFSList)) {
+                            contains = true;
+                            break;
+                        }
+                    }
+                    if (contains == false && BFSList.size() != 0)
+                        settlementsToMake.add(BFSList);
                 }
+
+                if (settlementsToMake.size() > 1) {
+                    settlementList.remove(oldID);
+                    for (List<Hex> hexList : settlementsToMake) {
+                        int settlementID = settlementList.size();
+                        settlementList.add(new Settlement(hexList, settlementID, p));
+                    }
+                }
+            }
+            else{
+                settlementList.remove(temp);
             }
         }
     }
@@ -92,8 +106,9 @@ public class Board {
         List<Hex> temp = new Vector<Hex>();
         boolean quit = false;
         Hex current = hex;
+        temp.add(hex);
         int ID = hex.getSettlementID();
-        int index = -1;
+        int index = 0;
         while (!quit) {
             for (int i = 0; i < 6; i++) {
                 if(getAdjHex(current, i) != null) {

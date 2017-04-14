@@ -16,11 +16,12 @@ public class Settlement {
         hex.setSettlementID(settlementID);
     }
 
-    public Settlement(List<Hex> hexList, int ID){
+    public Settlement(List<Hex> hexList, int ID, Player P){
         hexesInSettlement = hexList;
         settlementID = ID;
         for (Hex hex : hexesInSettlement){
             hex.setSettlementID(settlementID);
+            hex.setOwner(P);
         }
     }
 
@@ -47,12 +48,13 @@ public class Settlement {
 
     public void removeHex(Hex hex){
         hexesInSettlement.remove(hex);
+        hex.setSettlementID(-1);
+        hex.setOwner(null);
     }
 
     public Player getOwner(){
-        if(hexesInSettlement.size() == 0) {
+        if(hexesInSettlement.size() == 0)
             return null;
-        }
         return hexesInSettlement.get(0).getOwner();
     }
 
