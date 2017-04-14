@@ -1,3 +1,6 @@
+#GroupG TigerIsland
+
+
 ReadME: 
 Functionality         - Tile Placement
                           All build options:
@@ -13,7 +16,7 @@ Project Config        - Project SDK: JRE 1.8
                         (http://imgur.com/a/n63wl)
                        
 Testing                - One of our group members got up to 76% acceptance test coverage with cucumber.
-                       - We have 80% line coverage with unit tests.
+                       - We have 81% line coverage with unit tests.
      
                         
 No other libraries or artifacts needed to run program. 
