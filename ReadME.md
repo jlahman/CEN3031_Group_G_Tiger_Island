@@ -12,10 +12,12 @@ ReadME:
                                 4) Tiger Sanctuary Placement
                           AI as a statemachine with priority build options
                           Connection to Server       
-## Project Dependencies  - Cucumber and Junit (http://imgur.com/a/k7KRT)
-## Project Config        - Project SDK: JRE 1.8
+## Project Dependencies  - (http://imgur.com/a/k7KRT)
+                        Cucumber and Junit
+## Project Config        - (http://imgur.com/a/n63wl)
+                        Project SDK: JRE 1.8
                         Project language level SDK default (8)
-                         (http://imgur.com/a/n63wl)
+                         
                        
 ## Testing                - One of our group members got up to 76% acceptance test coverage with cucumber.
                        - We have 81% line coverage with unit tests.
