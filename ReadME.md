@@ -10,7 +10,7 @@
                                 3) Totoro Sanctuary Placement
                                 4) Tiger Sanctuary Placement
                           AI as a statemachine with priority build options
-                          Connection to Server       
+                          Ability to interact properly with server   
 ## Project Dependencies  - (http://imgur.com/a/k7KRT)
                         Cucumber and Junit
 ## Project Config        - (http://imgur.com/a/n63wl)
