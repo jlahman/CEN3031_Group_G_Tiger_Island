@@ -1,7 +1,6 @@
 # GroupG TigerIsland
 
 
-ReadME: 
 
 ## Functionality         
                           Tile Placement
