@@ -10,7 +10,9 @@
                                 3) Totoro Sanctuary Placement
                                 4) Tiger Sanctuary Placement
                           AI as a statemachine with priority build options
-                          Ability to interact properly with server   
+                          Ability to interact properly with server*
+                              *Occasionally, our client will send a build move that the server detects is illegal. We were 
+                              *unable to figure out exactly what caused the error in our game logic.
 ## Project Dependencies  - (http://imgur.com/a/k7KRT)
                         Cucumber and Junit
 ## Project Config        - (http://imgur.com/a/n63wl)
