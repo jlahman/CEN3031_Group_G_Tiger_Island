@@ -3,14 +3,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Vector;
 //192.168.1.36 11111 TEAM_G PASS_G Iwanttobelieve
 //10.192.246.253 11111 TEAM_G PASS_G Iwanttobelieve
 //127.0.0.1 6969 A A heygang
-/**
+ /**
  * Created by Justin Lahman on 4/6/17.
  */
 public class Ambassador {
 ///*
+    public Vector<String> messageQueue = new Vector<String>();
     private String CRLF= "";
     private AI gameController1;
     private AI gameController2;
@@ -21,7 +23,7 @@ public class Ambassador {
     private PrintWriter outt;
     private BufferedReader in;
 
-    private boolean done;
+    public boolean done;
     private String pid;
     private String cid;
     private String rid;
@@ -72,18 +74,45 @@ public class Ambassador {
     }
 
     public void listen(){
-        String message;
-        try{
-            while(!done){
+       // synchronized (messageQueue) {
+            String message;
+
+            try {
+                //while(!done){
                 message = in.readLine();
                 sTime = System.nanoTime();
-                System.out.println("Server @ T= "+ sTime +": "+ message);
-                actOnMessage(message);
+                System.out.println("Server @ T= " + sTime + ": " + message);
+                messageQueue.add(message);
 
+                //actOnMessage(message);
+
+                // }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
+       // }
+    }
+
+    public void runNextMessage(){
+        //synchronized(messageQueue){
+            String message;
+
+        try{
+           // while(!done){
+            if(messageQueue.size() != 0) {
+                message = messageQueue.get(0);
+                //sTime = System.nanoTime();
+                //System.out.println("Server @ T= "+ sTime +": "+ message);
+                messageQueue.remove(0);
+                actOnMessage(message);
+            }
+                //actOnMessage(message);
+
+           // }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+       // }
     }
 //10.136.31.59 6969 G heygang
     public void sendMessage(String message){
@@ -131,6 +160,7 @@ public class Ambassador {
             }
             else if(message[2].equals("CHALLENGES")){
                 //no action required
+                done = true;
             }
         }
         else if(message[0].equals("WAIT") && message[3] == "NEXT"){

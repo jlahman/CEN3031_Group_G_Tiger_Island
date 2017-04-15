@@ -248,7 +248,7 @@ public class AI {
             n = 2;
         }else if(buildTiger.size() != 0){
             n = 3;
-        } else if(expandSettlement.size() != 0 && flip == 0&& game.player1.getMeepleCount() >5 ){
+        } else if(expandSettlement.size() != 0 && (flip == 0 || game.player1.getTotoroCount() == 1 )){
             n = 1;
         } else if(buildSettlement.size() != 0){
             n = 0;

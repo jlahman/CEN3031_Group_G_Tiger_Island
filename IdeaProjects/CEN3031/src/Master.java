@@ -19,8 +19,26 @@ public class Master {
         amb.setAI2(game2AI);
         amb.init();
         amb.listen();*/
-       Master m = new Master();
-       m.play();
+       final Master m = new Master();
+       Thread listener = new Thread(){
+           public void run(){
+               while(!m.amb.done){
+                m.play();
+           }
+           }
+       };
+
+       Thread actor = new Thread(){
+           public void run(){
+             while(!m.amb.done){
+              m.act();
+           }
+           }
+       };
+
+       listener.start();
+       actor.start();
+       //m.play();
         /*Thread listener = new Thread(){
             public void run(){
                 ambassador.listen();
@@ -36,20 +54,27 @@ public class Master {
         String temp = input.nextLine();
         Cargs = temp.split("\\s+");
         amb = new Ambassador();
-
-    }
-
-    public void play(){
         int i  = Integer.parseInt(Cargs[1]);
         //if (i != 4444)
-            //System.out.println(i);
+        //System.out.println(i);
         amb.init(Cargs[0], i, Cargs[2], Cargs[3], Cargs[4]);
         AI game1AI = new AI();
         AI game2AI = new AI();
         amb.setAI1(game1AI);
         amb.setAI2(game2AI);
         amb.init();
+    }
 
-        amb.listen();
+    public void play(){
+
+       // while(!amb.done) {
+            amb.listen();
+        //}
+    }
+
+    public void act(){
+        //while(!amb.done) {
+            amb.runNextMessage();
+        //}
     }
 }

@@ -43,6 +43,7 @@ public class Board {
 
             temp = getAdjHex(hexArr[oldHex.indexX][oldHex.indexY], (2 * connectingHex + tile.getOrientation() + 1) % 6);
             placeHex(tile.getTileHex((connectingHex + 2) % 3), temp);
+
             System.out.println("Placeing tile at : " + (oldHex.indexX - rootHex.indexX) + " " +(oldHex.indexY - rootHex.indexY) + " "+ tile.getOrientation() + " "+ connectingHex);
         }
     }
@@ -59,10 +60,10 @@ public class Board {
 //somehowsettlement size 0 exists after plaving on bleh
     private void updateSettlementList( Hex oldHex){
         if(oldHex.getSettlementID() != -1) {
-
             int oldID = oldHex.getSettlementID();
             Player p = oldHex.getOwner();
             Settlement temp = settlementList.get(oldID);
+            System.out.println("NUKED SETTLEMENT: " + oldID + " SIZE: " + temp.settlementSize());
 
             if (temp.settlementSize() != 1) {
                 temp.removeHex(oldHex);
