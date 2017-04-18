@@ -4,7 +4,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Vector;
-//192.168.1.36 11111 TEAM_G PASS_G Iwanttobelieve
+/*
+192.168.1.23 5276 TEAM_G PASS_G FunFunFun
+
+*/
 //10.192.246.253 11111 TEAM_G PASS_G Iwanttobelieve
 //127.0.0.1 6969 A A heygang
  /**
@@ -126,6 +129,10 @@ public class Ambassador {
     }
 
     protected void actOnMessage(String sentMessage){
+        if(sentMessage == null){
+            done = true;
+            return;
+        }
         String[] message = sentMessage.split("\\s+");
 
         String reply = "";
@@ -254,7 +261,6 @@ public class Ambassador {
                                     t = Terrain.ROCKY;
                                     break;
                             }
-                            //TODO make sure that xy on hexArr not null
                             gameController2.updateEnemyMove(tile, x, y, 0, 1, xb, yb, t);//build params)
                         }else
                         gameController2.updateEnemyMove(tile, x, y, 0, bo, xb, yb);
@@ -263,19 +269,46 @@ public class Ambassador {
             } else if (message[2].equals("OVER")) {
                 String gid = message[1];
                 if (gid.equals(gameController1.getGameID())) {
-                    gameController1.endGame();
+                   if(getWinnerPID(message).equals(pid))
+                       gameController1.endGame(true);
+                   else
+                       gameController1.endGame(false);
                 } else {
-                    gameController2.endGame();
+                    if(getWinnerPID(message).equals(pid))
+                        gameController2.endGame(true);
+                    else
+                        gameController2.endGame(false);
                 }
             } else if(message[6].equals("FORFEITED:") || message[6].equals("LOST:"))  {
-                String gid = message[1];
+                /*String gid = message[1];
                 if (gid.equals(gameController1.getGameID())) {
                     gameController1.endGame();
                 } else {
                     gameController2.endGame();
-                }
+                }  */
             }
         }
+    }
+
+    private String getWinnerPID(String[] message){
+        if(message[4].equals(pid)){
+            if(message[5].equals("WIN") || (Integer.parseInt(message[5]) >= Integer.parseInt(message[8]))) {
+                return pid;
+            }
+            else{
+                return message[7];
+            }
+        }
+        else if(message[7].equals(pid)){
+            if(message[8].equals("WIN") || (Integer.parseInt(message[8]) >= Integer.parseInt(message[5]))) {
+                return pid;
+            }
+            else{
+                return message[4];
+            }
+        }
+
+        return "";
     }
 
     private Tile getTileFromString(String tile){
@@ -330,15 +363,15 @@ public class Ambassador {
         }
         else if (gameController2.getGameID() == null) {
             gameController2.setGameID(gid);
-            reply = prefix + message[10] + " ";;
+            reply = prefix + message[10] + " ";
             reply += getMoveAsString(gameController2.playMove(tile, time));
         }
         else if(gid.equals(gameController1.getGameID())){
-            reply = prefix + message[10] + " ";;
+            reply = prefix + message[10] + " ";
             reply += getMoveAsString(gameController1.playMove(tile, time));
         }
         else if(gid.equals(gameController2.getGameID())){
-            reply = prefix + message[10] + " ";;
+            reply = prefix + message[10] + " ";
             reply += getMoveAsString(gameController2.playMove(tile, time));
         }
 

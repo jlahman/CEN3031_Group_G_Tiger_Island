@@ -22,7 +22,7 @@ public class BuildOptions {
             placedHexes.add(hex);
 
             checkForAdjSettlements(board);
-            joinSettlements(board, hex.getSettlementID());
+            joinSettlements(board, settlementID);
             cleanLists();
             System.out.println("Built settlement at: " + (hex.indexX - board.rootHex.indexY)+ " " + (hex.indexY - board.rootHex.indexX));
         }
@@ -42,10 +42,8 @@ public class BuildOptions {
     }
 
     private void joinSettlements(Board board, int id){
-        for (Settlement s: settlementsToJoin){
-            combineSettlements(board, id, s);
-        }
-        //toJoinTo = board.settlementList.get(id);
+
+        Settlement toJoinTo = board.settlementList.get(id);
         for (Settlement s: settlementsToJoin){
             for(Settlement higher: board.settlementList){
                 if(higher.getSettlementID() > s.getSettlementID()){
@@ -53,20 +51,24 @@ public class BuildOptions {
                 }
             }
             board.settlementList.remove(s);
+            System.out.println("Removing settlement " + s.getSettlementID());
         }
-
+        for (Settlement s: settlementsToJoin){
+            combineSettlements(board, toJoinTo.getSettlementID(), s);
+        }
 
     }
 
     private void combineSettlements(Board board, int id, Settlement s){
         for(Hex hex: s.hexesInSettlement){
+            System.out.println("Joining settlement " + s.getSettlementID() + " to " + id);
             board.settlementList.get(id).addHex(hex);
         }
     }
 
     private void cleanLists(){
-        placedHexes.removeAll(placedHexes);
-        settlementsToJoin.removeAll(settlementsToJoin);
+        placedHexes.clear();//.removeAll(placedHexes);
+        settlementsToJoin.clear();//removeAll(settlementsToJoin);
     }
 
     public boolean isBuildSettlementValid(Hex hex, int remainingMeeple){
@@ -93,6 +95,9 @@ public class BuildOptions {
             cleanLists();
 
         }
+        else{
+            System.err.println("Could not expand settlement ID: " + settlementID + " " + p.toString() + " " + terrain.getTerrainText());
+        }
     }
 
     public boolean isExpandSettlementValid(Board board, int settlementID, Terrain terrain, Player p){
@@ -112,7 +117,7 @@ public class BuildOptions {
             isPlayer = true;
         //for each hex in the settlement, check adj hexes
         Hex hex = null;
-        int j=0;
+       /* int j=0;
         for(int i = 0; i < temp.settlementSize(); i++){
             hex = temp.hexesInSettlement.get(i);
 
@@ -146,12 +151,12 @@ public class BuildOptions {
 
         List<Hex> hexList = BFSForTerrain(board, temp.hexesInSettlement.get(0), terrain);
         //noinspection StatementWithEmptyBody
-        /*for(Hex h: hexList){
+        for(Hex h: hexList){
             if(h.getTerrain() == terrain && h.isEmpty()){
                 isAdjTerrain = true;
                 break;
             }
-        }*/
+        }
         //if(hexList.size() >= temp.settlementSize())
           //  isAdjTerrain = true;
         int needMeepleNum = 0;
@@ -227,7 +232,9 @@ public class BuildOptions {
     private int findAdjSettlementForTotoro(Board board, Hex hex, Player P) {
         for(int i = 0; i <6; i++){
             if(board.getAdjHex(hex, i) != null){
-                if(board.getAdjHex(hex, i).getSettlementID() != -1 && board.getAdjHex(hex, i).getOwner() == P && board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).settlementSize() >= 5 && !board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).hasTotoro())
+                if(board.getAdjHex(hex, i).getSettlementID() != -1 && board.getAdjHex(hex, i).getOwner() == P
+                        && board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).settlementSize() >= 5
+                        && !board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).hasTotoro())
                     return board.getAdjHex(hex, i).getSettlementID();
             }
         }
@@ -237,7 +244,7 @@ public class BuildOptions {
     private int findAdjSettlementForTiger(Board board, Hex hex, Player P) {
         for(int i = 0; i <6; i++){
             if(board.getAdjHex(hex, i) != null){
-                if(board.getAdjHex(hex, i).getSettlementID() != -1 && board.getAdjHex(hex, i).getOwner() == P  && !board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).hasTiger())
+                if(board.getAdjHex(hex, i).getSettlementID() != -1 && board.getAdjHex(hex, i).getOwner() == P && !board.settlementList.get(board.getAdjHex(hex, i).getSettlementID()).hasTiger())
                     return board.getAdjHex(hex, i).getSettlementID();
             }
         }

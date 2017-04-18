@@ -90,7 +90,13 @@ public class Board {
                 }
 
                 if (settlementsToMake.size() > 1) {
+                    for(Settlement s: settlementList){
+                        if(s.getSettlementID() > oldID){
+                            s.setSettlementID(s.getSettlementID() - 1);
+                        }
+                    }
                     settlementList.remove(oldID);
+
                     for (List<Hex> hexList : settlementsToMake) {
                         int settlementID = settlementList.size();
                         settlementList.add(new Settlement(hexList, settlementID, p));
@@ -98,6 +104,11 @@ public class Board {
                 }
             }
             else{
+                for(Settlement s: settlementList){
+                    if(s.getSettlementID() > oldID){
+                        s.setSettlementID(s.getSettlementID() - 1);
+                    }
+                }
                 settlementList.remove(temp);
             }
         }
@@ -183,12 +194,6 @@ public class Board {
         boolean validOnSpace = isSpace && sameLevel;
         boolean validOnBoard = sameLevel && onVolcano && isNotNuking && isNotNuking2 && isNotNukingTotoro && isNotNukingTiger && isNotOnOneTile;
 
-        //if first turn
-        if(settlementList.size() == 0){
-            if(oldHex == rootHex && oldHex.getLevel() == 0){
-                return true;
-            }
-        }
         if(validOnSpace){
             return true;
         }
@@ -300,11 +305,66 @@ public class Board {
         //check left
             //if left is null, skip
             //else if left sID is -1, skip
-            //else if left sID is not -1, and settlementList(ID) == 1
+            //else if left sID is not -1, and settlementList(ID).size() == 1
             //return false
         if(temp1 != null && temp1.getSettlementID() != -1 && settlementList.get(temp1.getSettlementID()).settlementSize() == 1)
             return false;
         if(temp2 != null && temp2.getSettlementID() != -1 && settlementList.get(temp2.getSettlementID()).settlementSize() == 1)
+            return false;
+
+        return true;
+    }
+    public boolean isTileNotNukingSettlementThatCanHaveTotoro(Tile tile, Hex oldHex, int connectingHex, Player P){
+        Hex temp1, temp2;
+        if(connectingHex == 0){
+            temp1 = getAdjHex(oldHex, 0 + tile.getOrientation());
+            temp2 = getAdjHex(oldHex, (1 + tile.getOrientation())%6);
+        }
+        else if(connectingHex == 1){
+            temp1 = oldHex;
+            temp2 = getAdjHex(oldHex, (2 + tile.getOrientation())%6);
+        }
+        else{
+            temp2 = oldHex;
+            temp1 = getAdjHex(oldHex, (5 + tile.getOrientation())%6);
+        }
+        //only false when temp 1 or temp2 contains a settlement of size 1
+        //check left
+        //if left is null, skip
+        //else if left sID is -1, skip
+        //else if left sID is not -1, and settlementList(ID).size() == 1
+        //return false
+        if(temp1 != null && temp1.getSettlementID() != -1 && temp1.getOwner() == P && settlementList.get(temp1.getSettlementID()).settlementSize() >= 4)
+            return false;
+        if(temp2 != null && temp2.getSettlementID() != -1 && temp2.getOwner() == P && settlementList.get(temp2.getSettlementID()).settlementSize() >= 4)
+            return false;
+
+        return true;
+    }
+
+    public boolean isTileNukingSettlementThatCanHaveTotoroUnfriendly(Tile tile, Hex oldHex, int connectingHex, Player P){
+        Hex temp1, temp2;
+        if(connectingHex == 0){
+            temp1 = getAdjHex(oldHex, 0 + tile.getOrientation());
+            temp2 = getAdjHex(oldHex, (1 + tile.getOrientation())%6);
+        }
+        else if(connectingHex == 1){
+            temp1 = oldHex;
+            temp2 = getAdjHex(oldHex, (2 + tile.getOrientation())%6);
+        }
+        else{
+            temp2 = oldHex;
+            temp1 = getAdjHex(oldHex, (5 + tile.getOrientation())%6);
+        }
+        //only false when temp 1 or temp2 contains a settlement of size 1
+        //check left
+        //if left is null, skip
+        //else if left sID is -1, skip
+        //else if left sID is not -1, and settlementList(ID).size() == 1
+        //return false
+        if(temp1 != null && temp1.getSettlementID() != -1 &&temp1.getOwner() == P && settlementList.get(temp1.getSettlementID()).settlementSize() >= 4)
+            return false;
+        if(temp2 != null && temp2.getSettlementID() != -1 && temp1.getOwner() == P && settlementList.get(temp2.getSettlementID()).settlementSize() >= 4)
             return false;
 
         return true;

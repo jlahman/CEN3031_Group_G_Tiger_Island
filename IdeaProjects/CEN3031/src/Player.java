@@ -7,9 +7,9 @@ public class Player {
 
 
     public Player(String name) {
-        setMeepleCount(20);
-        setTotoroCount(3);
-        setTigerCount(2);
+        meepleCount = 20;
+        totoroCount = 3;
+        tigerCount = 2;
         score = 0;
         this.name = name;
     }
@@ -50,11 +50,11 @@ public class Player {
     }
 
     public void decreaseTotoroCount(int i){
-        this.meepleCount = this.meepleCount - i;
+        this.totoroCount = this.totoroCount - i;
     }
 
     public void decreaseTigerCount(int i){
-        this.meepleCount = this.meepleCount - i;
+        this.tigerCount = this.tigerCount - i;
     }
 
     public int getScore(){
